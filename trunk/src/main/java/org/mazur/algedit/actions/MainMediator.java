@@ -23,6 +23,7 @@ public class MainMediator {
    * Opens the new document.
    */
   public void createNewAlgorithm() {
+    editorFrame.log("Creating new document...");
     editorFrame.createNew();
   }
 }
