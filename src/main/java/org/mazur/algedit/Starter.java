@@ -3,6 +3,7 @@
  */
 package org.mazur.algedit;
 
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -14,6 +15,9 @@ import java.io.File;
  */
 public final class Starter {
 
+  /** Standard frame dimension. */
+  private static final Dimension STANDARD_DIMENSION = new Dimension(600, 500);
+  
   /** File to open. */
   private File file;
   
@@ -38,6 +42,8 @@ public final class Starter {
         System.exit(0);
       }
     });
+    frame.pack();
+    frame.setSize(Starter.STANDARD_DIMENSION);
     frame.setVisible(true);
   }
   

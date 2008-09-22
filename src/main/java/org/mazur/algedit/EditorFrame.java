@@ -4,10 +4,11 @@
 package org.mazur.algedit;
 
 import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.Action;
 import javax.swing.JFrame;
@@ -19,9 +20,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultStyledDocument;
 
 import org.mazur.algedit.actions.MainMediator;
 import org.mazur.algedit.actions.NewAction;
+import org.mazur.algedit.actions.NullAction;
+import org.mazur.algedit.components.AlgorithmContent;
+import org.mazur.algedit.components.Editor;
 
 /**
  * Main frame of the editor.
@@ -30,26 +35,28 @@ import org.mazur.algedit.actions.NewAction;
  */
 public class EditorFrame extends JFrame {
   
-  /** Standard frame dimension. */
-  private static final Dimension STANDARD_DIMENSION = new Dimension(600, 500);
+  /** "Noname". */
+  private static final String NONAME = "noname";
+  
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyyy hh:mm:ss]");
   
   /** Menu items. */
   private final String[] menus = {"File", "Edit", "Help"};
 
   /** Actions mediator. */
-  private MainMediator mediator = null;
+  private MainMediator mediator = new MainMediator();
   /** Menu subitems. */
   private final Action[][] menuItems = {
     {new NewAction(mediator), 
-     null, 
-     null, 
-     null},
+     new NullAction("Save", null), 
+     new NullAction("Save as", null), 
+     new NullAction("Open", null)},
      
-    {null,
-     null,
-     null},
+    {new NullAction("Copy", null),
+     new NullAction("Paste", null),
+     new NullAction("Cut", null)},
      
-    {null}
+    {new NullAction("About", null)}
   };
   
   /** Caption. */
@@ -61,12 +68,14 @@ public class EditorFrame extends JFrame {
   /** Log area. */
   private JTextArea logArea = new JTextArea();
   
+  /** Index for new documents. */
+  private int documentsIndex = 0;
+  
   /**
    * Constructor.
    */
   public EditorFrame(final String caption) {
     this.caption = caption;
-    this.mediator = new MainMediator();
     this.mediator.setEditorFrame(this);
     setTitle(caption);
     
@@ -78,9 +87,7 @@ public class EditorFrame extends JFrame {
     
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout());
-    mainPanel.add(BorderLayout.NORTH, buildMenu());
     mainPanel.add(BorderLayout.CENTER, documentTabs);
-    mainPanel.setSize(EditorFrame.STANDARD_DIMENSION);
     
     JScrollPane logPane = new JScrollPane();
     logPane.getViewport().add(logArea);
@@ -88,7 +95,9 @@ public class EditorFrame extends JFrame {
     splitter.setTopComponent(mainPanel);
     splitter.setBottomComponent(logPane);
     splitter.setOneTouchExpandable(true);
-    pane.add("Center", splitter);
+    
+    pane.add(BorderLayout.NORTH, buildMenu());
+    pane.add(BorderLayout.CENTER, splitter);
   }
   
   private JMenuBar buildMenu() {
@@ -108,9 +117,23 @@ public class EditorFrame extends JFrame {
   }
   
   /**
+   * @param msg message to write
+   */
+  public void log(final String msg) {
+    Date now = new Date();
+    String old = logArea.getText();
+    logArea.setText(old + EditorFrame.DATE_FORMAT.format(now) + " --> " + msg + "\n");
+  }
+  
+  /**
    * Creates new document.
    */
   public void createNew() {
-    
+    String name = EditorFrame.NONAME + (++documentsIndex);
+    Editor e = new Editor();
+    AlgorithmContent ac = new AlgorithmContent(new DefaultStyledDocument(), mediator);
+    ac.addParagraph("BE");
+    e.setContent(ac);
+    documentTabs.add(name, e);
   }
 }
