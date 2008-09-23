@@ -132,7 +132,8 @@ public class EditorFrame extends JFrame {
     String name = EditorFrame.NONAME + (++documentsIndex);
     Editor e = new Editor();
     AlgorithmContent ac = new AlgorithmContent(new DefaultStyledDocument(), mediator);
-    ac.addParagraph("BE");
+    ac.addText("BE");
+    ac.changeStyle(0, 1, "error");
     e.setContent(ac);
     documentTabs.add(name, e);
   }
