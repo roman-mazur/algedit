@@ -35,6 +35,9 @@ public final class Starter {
    * Starts the editor.
    */
   public void start() {
+    for (int i = 0; i < 255; i++) {
+      System.out.print((char)i);
+    }
     EditorFrame frame = new EditorFrame("algedit");
     frame.addWindowListener(new WindowAdapter() {
       @Override
