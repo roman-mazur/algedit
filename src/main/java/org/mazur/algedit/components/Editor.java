@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -35,5 +34,14 @@ public class Editor extends JPanel {
   
   public void setContent(final AlgorithmContent content) {
     textComponent.setDocument(content.getDoc());
+    content.setEditor(this);
+  }
+  
+  public int getCurrentPosition() {
+    return textComponent.getCaretPosition();
+  }
+  
+  public void setCurrentPosition(final int pos) {
+    textComponent.setCaretPosition(pos);
   }
 }

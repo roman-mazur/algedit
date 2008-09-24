@@ -4,7 +4,6 @@
 package org.mazur.algedit;
 
 import java.awt.BorderLayout;
-import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -131,10 +130,7 @@ public class EditorFrame extends JFrame {
   public void createNew() {
     String name = EditorFrame.NONAME + (++documentsIndex);
     Editor e = new Editor();
-    AlgorithmContent ac = new AlgorithmContent(new DefaultStyledDocument(), mediator);
-    ac.addText("BE");
-    ac.changeStyle(0, 1, "error");
-    e.setContent(ac);
+    e.setContent(new AlgorithmContent(new DefaultStyledDocument(), mediator));
     documentTabs.add(name, e);
   }
 }
