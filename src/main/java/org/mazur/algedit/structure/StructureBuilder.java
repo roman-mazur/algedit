@@ -31,6 +31,8 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
   private LinkedList<BackLink> lastLinks = new LinkedList<BackLink>();
   /** Back links. */
   private HashMap<Integer, BackLink> backLinks = new HashMap<Integer, BackLink>();
+  /** Cycles. */
+  private HashMap<Integer, Cycle> cycles = new HashMap<Integer, Cycle>();
   
   /** Current characters. */
   private String currentCharacters = "";
@@ -56,6 +58,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     } else {
       vertexes.set(vertexIndex, vertex);
     }
+    vertex.setNumber(vertexIndex);
   }
   
   private void processLastLinks(final AbstractVertex vertex) {
@@ -64,6 +67,8 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
       BackLink present = backLinks.get(bl.getNumber());
       if (present == null) {
         backLinks.put(bl.getNumber(), bl);
+        Cycle c = new Cycle(vertex, null);
+        cycles.put(bl.getNumber(), c);
         continue;
       }
       System.out.println("OK");
@@ -140,6 +145,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
         throw new MachineException();
       }
       cv.setAlternativeVertex(present.getVertex());
+      cycles.get(linkNumber).end = cv;
       backLinks.remove(linkNumber);
     }
   }
@@ -337,6 +343,13 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
           addEnd();
         }
       };
+    case END_OPERATOR_START_LINK:
+      return new SymbolHandler() {
+        protected void run(final Character c, final Machine m) {
+          endOperator(c);
+          startLink(c);
+        }
+      };
     default:
       System.out.println("UNKNOWN " + operation);
     }
@@ -373,7 +386,8 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     END_START_LINKING("endStartLinking"),
     END_CONDITION_START_LINK("endConditionStartLink"),
     END_CONDITION_ADD_END("endConditionAddEnd"),
-    END_OPERATOR_START_LINKING("endOperatorStartLinking");
+    END_OPERATOR_START_LINKING("endOperatorStartLinking"),
+    END_OPERATOR_START_LINK("endOperatorStartLink");
     
     private String name;
     private FunctionName(final String name) {
@@ -390,6 +404,10 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
   public BeginVertex getBeginVertex() {
     return (BeginVertex)vertexes.get(0);
   }
+  
+  public int size() {
+    return vertexIndex + 1;
+  }
 
   public void reset() {
     vertexIndex = -1;
@@ -398,14 +416,30 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     }
     lastLinks.clear();
     backLinks.clear();
-    System.out.println("RESET");
+    cycles.clear();
   }
 
   /**
    * {@inheritDoc}
    */
   public void finishCheck() throws ParseException {
-    // TODO Auto-generated method stub
+    String links = "";
+    for (int linkNumber : backLinks.keySet()) {
+      links += linkNumber + ", ";
+    }
+    if (links.length() > 0) {
+      throw new ParseException("Links " + links.substring(0, links.length() - 2) 
+          + " are not completed.");
+    }
+    if (!(vertexes.get(vertexIndex) instanceof EndVertex)) {
+      throw new ParseException("End vertex is required.");
+    }
     
+    
+  }
+  
+  private class Cycle {
+    private AbstractVertex begin, end;
+    private Cycle(final AbstractVertex b, final AbstractVertex e) { begin =b; end = e; }
   }
 }

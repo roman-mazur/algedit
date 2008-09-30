@@ -4,6 +4,7 @@
 package org.mazur.algedit.components;
 
 import java.awt.Color;
+import java.io.File;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -79,6 +80,8 @@ public class AlgorithmContent implements DocumentListener {
   
   private Editor editor;
   
+  private File source;
+  
   /**
    * @param doc document
    * @param mediator main mediator
@@ -150,6 +153,19 @@ public class AlgorithmContent implements DocumentListener {
    */
   public final DefaultStyledDocument getDoc() { return doc; }
 
+  private void processException(final ParseException e) {
+    String msg = e.getDetailMaeesage();
+    if (msg != null) {
+      mediator.error(msg);
+      changeStyle(0, doc.getLength(), AlgorithmContent.ERROR_STYLE);
+      return;
+    }
+    int o = e.getOffset();
+    if (e.getCharacter() == ' ') { o--; }
+    changeStyle(o, 1, AlgorithmContent.ERROR_STYLE);
+    mediator.error(e.getMessage());
+  }
+  
   public synchronized void check() {
     changed = false;
     try {
@@ -157,9 +173,7 @@ public class AlgorithmContent implements DocumentListener {
       changeStyle(0, doc.getLength(), AlgorithmContent.BASIC_STYLE);
       System.out.println(builder.getBeginVertex().draw());
     } catch (ParseException e) {
-      int o = e.getOffset();
-      if (e.getCharacter() == ' ') { o--; }
-      changeStyle(o, 1, AlgorithmContent.ERROR_STYLE);
+      processException(e);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -219,4 +233,26 @@ public class AlgorithmContent implements DocumentListener {
   public void setEditor(final Editor editor) {
     this.editor = editor;
   }
+
+  /**
+   * @return the source
+   */
+  public final File getSource() {
+    return source;
+  }
+
+  /**
+   * @param source the source to set
+   */
+  public final void setSource(File source) {
+    this.source = source;
+  }
+
+  /**
+   * @return the builder
+   */
+  public final StructureBuilder getBuilder() {
+    return builder;
+  }
+
 }

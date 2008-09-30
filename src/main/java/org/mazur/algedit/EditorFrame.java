@@ -24,6 +24,8 @@ import javax.swing.text.DefaultStyledDocument;
 import org.mazur.algedit.actions.MainMediator;
 import org.mazur.algedit.actions.NewAction;
 import org.mazur.algedit.actions.NullAction;
+import org.mazur.algedit.actions.OpenAction;
+import org.mazur.algedit.actions.SaveAsAction;
 import org.mazur.algedit.components.AlgorithmContent;
 import org.mazur.algedit.components.Editor;
 
@@ -34,6 +36,9 @@ import org.mazur.algedit.components.Editor;
  */
 public class EditorFrame extends JFrame {
   
+  /** serialVersionUID. */
+  private static final long serialVersionUID = -7866639833323708860L;
+
   /** "Noname". */
   private static final String NONAME = "noname";
   
@@ -48,8 +53,8 @@ public class EditorFrame extends JFrame {
   private final Action[][] menuItems = {
     {new NewAction(mediator), 
      new NullAction("Save", null), 
-     new NullAction("Save as", null), 
-     new NullAction("Open", null)},
+     new SaveAsAction(mediator), 
+     new OpenAction(mediator)},
      
     {new NullAction("Copy", null),
      new NullAction("Paste", null),
@@ -132,5 +137,17 @@ public class EditorFrame extends JFrame {
     Editor e = new Editor();
     e.setContent(new AlgorithmContent(new DefaultStyledDocument(), mediator));
     documentTabs.add(name, e);
+  }
+  
+  public void openNewTab(final String text, final String name) {
+    Editor e = new Editor();
+    AlgorithmContent ac = new AlgorithmContent(new DefaultStyledDocument(), mediator);
+    ac.addText(text);
+    e.setContent(ac);
+    documentTabs.add(name, e);
+  }
+  
+  public Editor getCurrentEditor() {
+    return (Editor)documentTabs.getSelectedComponent();
   }
 }

@@ -100,7 +100,7 @@ public class AlgPar {
     s += "6:endOperatorAddEnd "; // E
     s += "3:endOperatorStartCondition 3:endOperatorStartCondition "; // x X
     s += "4:endStartOperator 4:endStartOperator "; // y Y
-    s += "11:error "; // ^
+    s += "7:endOperatorStartLink "; // ^
     s += "9:endOperatorStartLinking "; // _
     for (int i = 0; i < 10; i++) { s += "3:character "; }
     s += "1:endOperator "; // \n
@@ -169,7 +169,7 @@ public class AlgPar {
     s += "11:error "; // B
     s += "6:endLinkingAddEnd "; // E
     s += "2:endLinkingStartCondition 2:endLinkingStartCondition "; // x X
-    s += "2:endLinkingStartOperator 2:endLinkingStartOperator "; // y Y
+    s += "4:endLinkingStartOperator 4:endLinkingStartOperator "; // y Y
     s += "11:error "; // ^
     s += "9:endStartLinking "; // _
     for (int i = 0; i < 10; i++) { s += "10:character "; }

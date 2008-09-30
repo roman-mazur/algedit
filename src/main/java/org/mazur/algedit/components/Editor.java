@@ -21,6 +21,9 @@ public class Editor extends JPanel {
   
   /** Text component. */
   private JTextComponent textComponent = null;
+  /** Content. */
+  private AlgorithmContent content;
+  
   
   /** Constructor. */
   public Editor() {
@@ -34,9 +37,17 @@ public class Editor extends JPanel {
   
   public void setContent(final AlgorithmContent content) {
     textComponent.setDocument(content.getDoc());
+    this.content = content;
     content.setEditor(this);
   }
   
+  /**
+   * @return the content
+   */
+  public final AlgorithmContent getContent() {
+    return content;
+  }
+
   public int getCurrentPosition() {
     return textComponent.getCaretPosition();
   }
