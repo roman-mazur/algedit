@@ -38,7 +38,11 @@ public class Analyzer implements Runnable {
       if (content.isChanged()) {
         long dif = System.currentTimeMillis() - content.getLastEditTime();
         if (dif >= Analyzer.INTERVAL) {
-          this.content.check();
+          try {
+            this.content.check();
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         }
       }
       try {

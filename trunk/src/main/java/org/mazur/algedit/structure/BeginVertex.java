@@ -33,4 +33,9 @@ public class BeginVertex extends AbstractVertex {
     return draw(links);
   }
 
+  @Override
+  public VertexType getType() {
+    return VertexType.SPECIAL;
+  }
+
 }

@@ -30,4 +30,8 @@ public class OperatorVertax extends AbstractVertex {
     return linksStr + getLabel() + " " + next;
   }
 
+  @Override
+  public VertexType getType() {
+    return VertexType.OPERATOR;
+  }
 }

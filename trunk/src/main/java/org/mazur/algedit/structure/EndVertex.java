@@ -33,4 +33,8 @@ public class EndVertex extends AbstractVertex {
     return linksStr + getLabel();
   }
 
+  @Override
+  public VertexType getType() {
+    return VertexType.SPECIAL;
+  }
 }

@@ -82,4 +82,6 @@ public abstract class AbstractVertex {
   }
   
   public abstract String draw(final LinkedList<BackLink> links);
+  
+  public abstract VertexType getType();
 }

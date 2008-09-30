@@ -69,4 +69,9 @@ public class ConditionVertex extends AbstractVertex {
     return linksStr + getLabel() + "^" + linkIndex + " " + next;
   }
 
+  @Override
+  public VertexType getType() {
+    return VertexType.CONDITION;
+  }
+
 }
