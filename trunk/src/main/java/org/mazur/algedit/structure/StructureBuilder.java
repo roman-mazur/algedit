@@ -41,16 +41,23 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     return vertexes.get(vertexIndex);
   }
   
-  private void setSignalIndex() {
-    System.out.println("SIGNAL: " + currentCharacters + " for " + vertexIndex);
+  private void setSignalIndex(final AbstractVertex av) {
     int signalNumber = Integer.parseInt(currentCharacters);
-    getLastVertex().setSignalIndex(signalNumber);
+    av.setSignalIndex(signalNumber);
     currentCharacters = "";
   }
 
   private void addToArray(final AbstractVertex vertex) {
     if (vertexIndex >= 0) {
-      getLastVertex().setStraightVertex(vertex);
+      int vi = vertexIndex;
+      System.out.println("!!!" + vertexes.get(vi) +  vertexes.get(vi).getStraightVertex() + " " + (vi));
+      while (vi >= 0 && vertexes.get(vi).getStraightVertex() != null) { vi--; }
+      if (vi >= 0 && vi < vertexIndex) {
+        throw new MachineException();
+      }
+      if (vi >= 0) {
+        vertexes.get(vi).setStraightVertex(vertex);
+      }
     }
     vertexIndex++;
     if (vertexes.size() == vertexIndex) {
@@ -67,41 +74,40 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
       BackLink present = backLinks.get(bl.getNumber());
       if (present == null) {
         backLinks.put(bl.getNumber(), bl);
-        Cycle c = new Cycle(vertex, null);
-        cycles.put(bl.getNumber(), c);
         continue;
       }
-      System.out.println("OK");
-      if (!(present.getVertex() instanceof ConditionVertex)) { throw new MachineException(); }
-      ConditionVertex cv = (ConditionVertex)present.getVertex();
-      cv.setAlternativeVertex(vertex);
+      if (present.isDirection()) { throw new MachineException(); }
+      switch (present.getVertex().getType()) {
+      case OPERATOR:
+      case SPECIAL:
+        present.getVertex().setStraightVertex(vertex);
+        break;
+      case CONDITION:
+        ((ConditionVertex)present.getVertex()).setAlternativeVertex(vertex);
+        break;
+      default:
+      }
       backLinks.remove(present.getNumber());
     }
     lastLinks.clear();
   }
   
   private void addBegin() {
+    currentCharacters = "";
     addToArray(new BeginVertex());
-    System.out.println("addBegin finish " + vertexIndex + " / " + vertexes.size());
   }
   
   private void addEnd() {
     AbstractVertex v = new EndVertex();
+    System.out.println("add " + v);
     addToArray(v);
     processLastLinks(v);
-    System.out.println("addEnd finish " + vertexIndex);
   }
   
   private void startCondition(final Character c) {
-    ConditionVertex v = new ConditionVertex();
-    getLastVertex().setStraightVertex(v);
-    processLastLinks(v);
   }
   
   private void startOperator(final Character c) {
-    OperatorVertax v = new OperatorVertax();
-    getLastVertex().setStraightVertex(v);
-    processLastLinks(v);
   }
 
   private void startLink(final Character c) {
@@ -117,41 +123,46 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
   }
 
   private void endCondition(final Character c) {
-    addToArray(getLastVertex().getStraightVertex());
-    setSignalIndex();
+    ConditionVertex cv = new ConditionVertex();
+    processLastLinks(cv);
+    addToArray(cv);
+    setSignalIndex(cv);
   }
 
   private void endOperator(final Character c) {
-    addToArray(getLastVertex().getStraightVertex());
-    setSignalIndex();
+    OperatorVertex ov = new OperatorVertex();
+    processLastLinks(ov);
+    addToArray(ov);
+    setSignalIndex(ov);
   }
 
   private void endLink(final Character c) {
     int linkNumber = Integer.parseInt(currentCharacters);
-    System.out.println("END LINK!!!! " + currentCharacters);
-    ConditionVertex cv = (ConditionVertex)getLastVertex();
-    cv.setLinkIndex(linkNumber);
+    AbstractVertex v = getLastVertex();
+    v.setLinkIndex(linkNumber);
     currentCharacters = "";
     BackLink present = backLinks.get(linkNumber);
     if (present == null) {
-      System.out.println("OK");
       BackLink bl = new BackLink();
-      bl.setVertex(getLastVertex());
+      bl.setVertex(v);
       bl.setNumber(linkNumber);
       bl.setDirection(false);
       backLinks.put(bl.getNumber(), bl);
-    } else {
-      if (!present.isDirection()) {
-        throw new MachineException();
+      if (v.getType() != VertexType.CONDITION) {
+        v.setStraightVertex(new NullVertex());
       }
-      cv.setAlternativeVertex(present.getVertex());
-      cycles.get(linkNumber).end = cv;
+    } else {
+      if (!present.isDirection()) { throw new MachineException(); }
+      if (v.getType() == VertexType.CONDITION) {
+        ((ConditionVertex)v).setAlternativeVertex(present.getVertex());
+      } else {
+        v.setStraightVertex(present.getVertex());
+      }
       backLinks.remove(linkNumber);
     }
   }
 
   private void endLinking(final Character c) {
-    System.out.println("END LINKING!!!! " + currentCharacters);
     BackLink bl = new BackLink();
     bl.setNumber(Integer.parseInt(currentCharacters));
     currentCharacters = "";
@@ -430,9 +441,6 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     if (links.length() > 0) {
       throw new ParseException("Links " + links.substring(0, links.length() - 2) 
           + " are not completed.");
-    }
-    if (!(vertexes.get(vertexIndex) instanceof EndVertex)) {
-      throw new ParseException("End vertex is required.");
     }
     
     

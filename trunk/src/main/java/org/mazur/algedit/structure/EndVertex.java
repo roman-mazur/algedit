@@ -4,6 +4,7 @@
 package org.mazur.algedit.structure;
 
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * End vertex.
@@ -14,6 +15,8 @@ public class EndVertex extends AbstractVertex {
   /** Label. */
   private static final String END_LABEL = "E";
 
+  private static final AbstractVertex NULL_VERTEX = new NullVertex();
+  
   /**
    * {@inheritDoc}
    * @see org.mazur.algedit.structure.Vertex#getLabel()
@@ -24,11 +27,11 @@ public class EndVertex extends AbstractVertex {
   
   @Override
   public AbstractVertex getStraightVertex() {
-    return null;
+    return EndVertex.NULL_VERTEX;
   }
 
   @Override
-  public String draw(final LinkedList<BackLink> links) {
+  public String draw(final LinkedList<BackLink> links, final Set<AbstractVertex> visited) {
     String linksStr = drawLinks(links);
     return linksStr + getLabel();
   }
