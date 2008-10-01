@@ -13,6 +13,7 @@ import org.mazur.algedit.components.AlgorithmContent;
 import org.mazur.algedit.structure.AlgorithmMatrix;
 import org.mazur.algedit.structure.BeginVertex;
 import org.mazur.algedit.structure.StructureBuilder;
+import org.mazur.algedit.structure.utils.Drawer;
 import org.mazur.parser.Machine;
 import org.mazur.parser.MachineFactory;
 
@@ -114,10 +115,10 @@ public class MainMediator {
       }
       AlgorithmMatrix m = (AlgorithmMatrix)o;
       BeginVertex bv = m.buildAlgorithm();
-      editorFrame.openNewTab(bv.draw(), file.getName());
+      editorFrame.openNewTab(new Drawer(bv).draw(), file.getName());
       log("Loaded from " + file.getAbsolutePath());
     } catch (Exception e) {
-      error(e.getMessage());
+      error(e.getMessage() + "");
     }
   }
 

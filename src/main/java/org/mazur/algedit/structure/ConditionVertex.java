@@ -4,6 +4,7 @@
 package org.mazur.algedit.structure;
 
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Condition vertex.
@@ -18,23 +19,6 @@ public class ConditionVertex extends AbstractVertex {
   /** Alternative vertex (for x=1). */
   private AbstractVertex alternativeVertex;
   
-  /** Link index. */
-  private int linkIndex = 0;
-  
-  /**
-   * @return the linkIndex
-   */
-  public final int getLinkIndex() {
-    return linkIndex;
-  }
-
-  /**
-   * @param linkIndex the linkIndex to set
-   */
-  public final void setLinkIndex(final int linkIndex) {
-    this.linkIndex = linkIndex;
-  }
-
   /**
    * @return the alternativeVertex
    */
@@ -58,15 +42,19 @@ public class ConditionVertex extends AbstractVertex {
   }
 
   @Override
-  public String draw(final LinkedList<BackLink> links) {
+  public String draw(final LinkedList<BackLink> links, final Set<AbstractVertex> visited) {
     BackLink bl = new BackLink();
     bl.setVertex(alternativeVertex);
-    bl.setNumber(linkIndex);
+    bl.setNumber(getLinkIndex());
     links.add(bl);
     
-    String next = getStraightVertex().draw(links);
+    String next = "";
+    if (!visited.contains(getStraightVertex())) {
+      next = getStraightVertex().draw(links, visited);
+      visited.add(getStraightVertex());
+    }
     String linksStr = drawLinks(links);
-    return linksStr + getLabel() + "^" + linkIndex + " " + next;
+    return linksStr + getLabel() + "^" + getLinkIndex() + " " + next + " _" + getLinkIndex();
   }
 
   @Override

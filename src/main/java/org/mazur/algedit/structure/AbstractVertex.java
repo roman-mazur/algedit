@@ -5,6 +5,7 @@ package org.mazur.algedit.structure;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Set;
 
 /**
  * Abstract algorithm vertex.
@@ -17,6 +18,9 @@ public abstract class AbstractVertex {
   private int number = 0;
   /** Signal index. */
   private int signalIndex = 0;
+  /** Link index. */
+  private int linkIndex = 0;
+  
   /** Next vertex. */
   private AbstractVertex straightVertex = null;
   
@@ -81,7 +85,23 @@ public abstract class AbstractVertex {
     return result;
   }
   
-  public abstract String draw(final LinkedList<BackLink> links);
+  public abstract String draw(final LinkedList<BackLink> links, final Set<AbstractVertex> visited);
   
   public abstract VertexType getType();
+
+  /**
+   * @return the linkIndex
+   */
+  public final int getLinkIndex() {
+    return linkIndex;
+  }
+
+  /**
+   * @param linkIndex the linkIndex to set
+   */
+  public final void setLinkIndex(final int linkIndex) {
+    this.linkIndex = linkIndex;
+  }
+
 }
+

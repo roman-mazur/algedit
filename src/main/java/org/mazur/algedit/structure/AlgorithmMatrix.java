@@ -4,6 +4,8 @@
 package org.mazur.algedit.structure;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  * @author Roman Mazur (IO-52)
@@ -34,16 +36,31 @@ public class AlgorithmMatrix implements Serializable {
   }
   
   private void build(final AbstractVertex vertex) {
-    AbstractVertex v = vertex;
-    while(v != null) {
-      info[v.getNumber()] = new VertexInfo(v); 
-      if (v.getStraightVertex() == null) { break; }
+    HashSet<AbstractVertex> visited = new HashSet<AbstractVertex>();
+    LinkedList<AbstractVertex> alternatives = new LinkedList<AbstractVertex>(),
+                               vertexes = new LinkedList<AbstractVertex>();
+    
+    AbstractVertex current = vertex;
+    do {
+      while (!(current instanceof NullVertex) && !visited.contains(current)) {
+        visited.add(current);
+        vertexes.add(current);
+        if (current.getType() == VertexType.CONDITION) {
+          alternatives.push(((ConditionVertex)current).getAlternativeVertex());
+        }
+        current = current.getStraightVertex();
+      }
+      if (alternatives.isEmpty()) { break; }
+      current = alternatives.pop();
+    } while (true);
+    for (AbstractVertex v : vertexes) {
+      info[v.getNumber()] = new VertexInfo(v);
+      if (v.getStraightVertex() instanceof NullVertex) { continue; }
       connectivity[v.getNumber()][v.getStraightVertex().getNumber()] = 1;
       if (v.getType() == VertexType.CONDITION) {
         int i = ((ConditionVertex)v).getAlternativeVertex().getNumber();
         connectivity[v.getNumber()][i] = 1;
       }
-      v = v.getStraightVertex();
     }
   }
   
@@ -78,7 +95,7 @@ public class AlgorithmMatrix implements Serializable {
       res.setSignalIndex(info.signalIndex);
       return res;
     case OPERATOR:
-      res = new OperatorVertax();
+      res = new OperatorVertex();
       res.setSignalIndex(info.signalIndex);
       return res;
     case SPECIAL:

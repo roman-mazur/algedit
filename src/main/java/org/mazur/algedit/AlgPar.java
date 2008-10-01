@@ -44,7 +44,7 @@ public class AlgPar {
     s += "6:addEnd "; // E
     s += "2:startCondition 2:startCondition "; // x X
     s += "4:startOperator 4:startOperator "; // y Y
-    s += "11:error "; // ^
+    s += "7:startLink "; // ^
     s += "9:startLinking "; // _
     for (int i = 0; i < 10; i++) { s += "11:error "; }
     s += "1:skip "; // \n
@@ -119,7 +119,7 @@ public class AlgPar {
     for (int i = 0; i < 10; i++) { s += "11:error "; }
     s += "6:skip "; // \n
     s += "6:skip "; // \r
-    s += "6:skip "; // space
+    s += "1:skip "; // space
     s += "11:error"; //else
     s += "\n";
 

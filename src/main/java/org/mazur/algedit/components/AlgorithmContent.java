@@ -16,6 +16,7 @@ import javax.swing.text.StyleContext;
 
 import org.mazur.algedit.actions.MainMediator;
 import org.mazur.algedit.structure.StructureBuilder;
+import org.mazur.algedit.structure.utils.Drawer;
 import org.mazur.parser.Machine;
 import org.mazur.parser.ParseException;
 import org.mazur.parser.Parser;
@@ -171,7 +172,7 @@ public class AlgorithmContent implements DocumentListener {
     try {
       parser.parse(doc.getText(0, doc.getLength()));
       changeStyle(0, doc.getLength(), AlgorithmContent.BASIC_STYLE);
-      System.out.println(builder.getBeginVertex().draw());
+      System.out.println(new Drawer(builder.getBeginVertex()).draw());
     } catch (ParseException e) {
       processException(e);
     } catch (Exception e) {
