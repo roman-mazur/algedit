@@ -14,9 +14,12 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
+import org.mazur.algedit.RedrawParseException;
 import org.mazur.algedit.actions.MainMediator;
+import org.mazur.algedit.structure.AbstractVertex;
 import org.mazur.algedit.structure.StructureBuilder;
 import org.mazur.algedit.structure.utils.Drawer;
+import org.mazur.algedit.structure.utils.RedrawInfo;
 import org.mazur.parser.Machine;
 import org.mazur.parser.ParseException;
 import org.mazur.parser.Parser;
@@ -167,14 +170,34 @@ public class AlgorithmContent implements DocumentListener {
     mediator.error(e.getMessage());
   }
   
+  private void markVertex(final AbstractVertex av, final String text) throws BadLocationException {
+    int i = av.getSymbolIndex() + 1;
+    while (i < text.length() && text.charAt(i) >= '0' && text.charAt(i) <= '9') { i++; }
+    changeStyle(av.getSymbolIndex(), i - av.getSymbolIndex(), AlgorithmContent.ERROR_STYLE);
+  }
+  
+  private void processRedraw(final RedrawParseException e) {
+    mediator.error("Algorithm mistakes are found!!!!");
+    try {
+      String text = doc.getText(0, doc.getLength());
+      for (AbstractVertex av : e.getRedrawList()) {
+        markVertex(av, text);
+      }
+    } catch (BadLocationException ee) {
+      ee.printStackTrace();
+    }
+  }
+  
   public synchronized void check() {
     changed = false;
     try {
-      parser.parse(doc.getText(0, doc.getLength()));
       changeStyle(0, doc.getLength(), AlgorithmContent.BASIC_STYLE);
-      System.out.println(new Drawer(builder.getBeginVertex()).draw());
+      parser.parse(doc.getText(0, doc.getLength()));
+      //System.out.println(new Drawer(builder.getBeginVertex()).draw());
     } catch (ParseException e) {
       processException(e);
+    } catch (RedrawParseException e) {
+      processRedraw(e); 
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

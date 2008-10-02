@@ -4,14 +4,12 @@
 package org.mazur.algedit.structure.utils;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.mazur.algedit.structure.AbstractVertex;
 import org.mazur.algedit.structure.BeginVertex;
 import org.mazur.algedit.structure.ConditionVertex;
-import org.mazur.algedit.structure.NullVertex;
 import org.mazur.algedit.structure.VertexType;
 
 /**
@@ -23,12 +21,21 @@ public class Drawer {
   private AbstractVertex start;
   private int linkIndex = 1;
   
-  private HashSet<AbstractVertex> visited = new HashSet<AbstractVertex>();
-  
-  private LinkedList<AbstractVertex> alternatives = new LinkedList<AbstractVertex>();
   private HashMap<AbstractVertex, List<AbstractVertex>> links = new HashMap<AbstractVertex, List<AbstractVertex>>();
   private HashMap<Branch, Integer> linkIndexes = new HashMap<Branch, Integer>();
   private LinkedList<AbstractVertex> forDrawing = new LinkedList<AbstractVertex>();
+
+  private Crawler crawler = new Crawler(start, new CrawlerHandler() {
+    public void processCondition(ConditionVertex v) {
+      addLink(v, v.getAlternativeVertex());
+    }
+    public void processNotEnd(AbstractVertex prev, AbstractVertex v) {
+      addLink(prev, v);
+    }
+    public void processVertex(final AbstractVertex v) {
+      forDrawing.add(v);
+    }
+  });
   
   public Drawer(final BeginVertex start) {
     this.start = start;
@@ -76,26 +83,8 @@ public class Drawer {
   }
   
   public String draw() {
-    AbstractVertex current = start, prev = null;
-    do {
-      prev = null;
-      while (!(current instanceof NullVertex) && !visited.contains(current)) {
-        visited.add(current);
-        System.out.println("pushing " + current.getLabel());
-        forDrawing.add(current);
-        if (current.getType() == VertexType.CONDITION) {
-          alternatives.push(((ConditionVertex)current).getAlternativeVertex());
-          addLink(current, ((ConditionVertex)current).getAlternativeVertex());
-        }
-        prev = current;
-        current = current.getStraightVertex();
-      }
-      if (!(current instanceof NullVertex) && prev != null) {
-        addLink(prev, current);
-      }
-      if (alternatives.isEmpty()) { break; }
-      current = alternatives.pop();
-    } while (true);
+    crawler.setStart(start);
+    crawler.crawl();
     String result = "";
     for (AbstractVertex av : forDrawing) {
       result += drawVertex(av) + " ";
@@ -103,4 +92,13 @@ public class Drawer {
     return result;
   }
   
+  public RedrawInfo drawExt() {
+    crawler.setStart(start);
+    crawler.crawl();
+    String content= "";
+    for (AbstractVertex av : forDrawing) {
+      content += drawVertex(av) + " ";
+    }
+    return new RedrawInfo(content, null);
+  }
 }

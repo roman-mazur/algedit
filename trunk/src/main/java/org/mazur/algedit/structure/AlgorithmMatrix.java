@@ -4,8 +4,10 @@
 package org.mazur.algedit.structure;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.LinkedList;
+
+import org.mazur.algedit.structure.utils.Crawler;
+import org.mazur.algedit.structure.utils.CrawlerHandler;
 
 /**
  * @author Roman Mazur (IO-52)
@@ -36,23 +38,16 @@ public class AlgorithmMatrix implements Serializable {
   }
   
   private void build(final AbstractVertex vertex) {
-    HashSet<AbstractVertex> visited = new HashSet<AbstractVertex>();
-    LinkedList<AbstractVertex> alternatives = new LinkedList<AbstractVertex>(),
-                               vertexes = new LinkedList<AbstractVertex>();
-    
-    AbstractVertex current = vertex;
-    do {
-      while (!(current instanceof NullVertex) && !visited.contains(current)) {
-        visited.add(current);
-        vertexes.add(current);
-        if (current.getType() == VertexType.CONDITION) {
-          alternatives.push(((ConditionVertex)current).getAlternativeVertex());
-        }
-        current = current.getStraightVertex();
+    final LinkedList<AbstractVertex> vertexes = new LinkedList<AbstractVertex>();
+    Crawler c = new Crawler(vertex, new CrawlerHandler() {
+      public void processCondition(final ConditionVertex v) { }
+      public void processNotEnd(final AbstractVertex prev, final AbstractVertex v) { }
+      public void processVertex(final AbstractVertex v) {
+        vertexes.add(v);
       }
-      if (alternatives.isEmpty()) { break; }
-      current = alternatives.pop();
-    } while (true);
+      
+    });
+    c.crawl();
     for (AbstractVertex v : vertexes) {
       info[v.getNumber()] = new VertexInfo(v);
       if (v.getStraightVertex() instanceof NullVertex) { continue; }
