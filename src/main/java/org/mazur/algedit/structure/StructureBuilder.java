@@ -5,8 +5,12 @@ package org.mazur.algedit.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
+import org.mazur.algedit.RedrawParseException;
+import org.mazur.algedit.structure.utils.Crawler;
+import org.mazur.algedit.structure.utils.CrawlerHandler;
 import org.mazur.parser.AbstractHandlersFactory;
 import org.mazur.parser.Machine;
 import org.mazur.parser.MachineException;
@@ -25,6 +29,8 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
   
   /** Vertex index. */
   private int vertexIndex = -1;
+  
+  private int symbolIndex = 0;
   
   /** Vertexes buffer. */
   private ArrayList<AbstractVertex> vertexes = new ArrayList<AbstractVertex>(StructureBuilder.INITIAL_BUFFER_SIZE);
@@ -94,12 +100,14 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
   
   private void addBegin() {
     currentCharacters = "";
-    addToArray(new BeginVertex());
+    BeginVertex b = new BeginVertex();
+    b.setSymbolIndex(symbolIndex);
+    addToArray(b);
   }
   
   private void addEnd() {
     AbstractVertex v = new EndVertex();
-    System.out.println("add " + v);
+    v.setSymbolIndex(symbolIndex);
     addToArray(v);
     processLastLinks(v);
   }
@@ -124,6 +132,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
 
   private void endCondition(final Character c) {
     ConditionVertex cv = new ConditionVertex();
+    cv.setSymbolIndex(symbolIndex);
     processLastLinks(cv);
     addToArray(cv);
     setSignalIndex(cv);
@@ -131,6 +140,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
 
   private void endOperator(final Character c) {
     OperatorVertex ov = new OperatorVertex();
+    ov.setSymbolIndex(symbolIndex);
     processLastLinks(ov);
     addToArray(ov);
     setSignalIndex(ov);
@@ -193,72 +203,84 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case ADD_BEGIN:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           addBegin();
         }
       };
     case ADD_END:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           addEnd();
         }
       };
     case START_CONDITION:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           startCondition(c);
         }
       };
     case START_LINK:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           startLink(c);
         }
       };
     case START_LINKING:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           startLinking(c);
         }
       };
     case START_OPERATOR:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           startOperator(c);
         }
       };
     case CHARACTER:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           character(c);
         }
       };
     case END_CONDITION:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endCondition(c);
         }
       };
     case END_LINK:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLink(c);
         }
       };
     case END_LINKING:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLinking(c);
         }
       };
     case END_OPERATOR:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endOperator(c);
         }
       };
     case END_CONDITION_START_LINK:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endCondition(c);
           startLink(c);
         }
@@ -266,6 +288,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_LINK_START_CONDITION:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLink(c);
           startCondition(c);
         }
@@ -273,6 +296,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_LINK_START_LINKING:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLink(c);
           startLinking(c);
         }
@@ -280,6 +304,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_LINK_START_OPERATOR:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLink(c);
           startOperator(c);
         }
@@ -287,6 +312,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_LINKING_START_CONDITION:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLinking(c);
           startCondition(c);
         }
@@ -294,6 +320,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_LINKING_START_OPERATOR:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLinking(c);
           startOperator(c);
         }
@@ -301,6 +328,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_OPERATOR_START_CONDITION:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endOperator(c);
           startCondition(c);
         }
@@ -308,6 +336,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_OPERATOR_START_LINKING:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endOperator(c);
           startLinking(c);
         }
@@ -315,6 +344,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_START_LINKING:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLinking(c);
           startLinking(c);
         }
@@ -322,6 +352,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_START_OPERATOR:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endOperator(c);
           startOperator(c);
         }
@@ -329,6 +360,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_CONDITION_ADD_END:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endCondition(c);
           addEnd();
         }
@@ -336,6 +368,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_LINK_ADD_END:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLink(c);
           addEnd();
         }
@@ -343,6 +376,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_LINKING_ADD_END:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endLinking(c);
           addEnd();
         }
@@ -350,6 +384,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_OPERATOR_ADD_END:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endOperator(c);
           addEnd();
         }
@@ -357,6 +392,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     case END_OPERATOR_START_LINK:
       return new SymbolHandler() {
         protected void run(final Character c, final Machine m) {
+          symbolIndex = m.getSymbolIndex();
           endOperator(c);
           startLink(c);
         }
@@ -442,8 +478,28 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
       throw new ParseException("Links " + links.substring(0, links.length() - 2) 
           + " are not completed.");
     }
-    
-    
+    final HashSet<AbstractVertex> notreachable = new HashSet<AbstractVertex>(vertexes);
+    Crawler c = new Crawler(getBeginVertex(), new CrawlerHandler() {
+      public void processCondition(final ConditionVertex v) { }
+      public void processNotEnd(final AbstractVertex prev, final AbstractVertex v) { }
+      public void processVertex(final AbstractVertex v) {
+        notreachable.remove(v);
+      }
+    });
+    c.crawl();
+    boolean redraw = false;
+    LinkedList<AbstractVertex> vs = new LinkedList<AbstractVertex>();
+    if (!notreachable.isEmpty()) {
+      for (AbstractVertex av : notreachable) {
+        if (av == null) { continue; }
+        av.setValidationType(ValidationType.UNREACHABLE);
+        vs.add(av);
+        redraw = true;
+      }
+    }
+    if (redraw) {
+      throw new RedrawParseException(vs);
+    }
   }
   
   private class Cycle {

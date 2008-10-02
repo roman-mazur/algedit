@@ -20,10 +20,42 @@ public abstract class AbstractVertex {
   private int signalIndex = 0;
   /** Link index. */
   private int linkIndex = 0;
+  private int symbolIndex = 0;
   
+  /**
+   * @return the symbolIndex
+   */
+  public final int getSymbolIndex() {
+    return symbolIndex;
+  }
+
+  /**
+   * @param symbolIndex the symbolIndex to set
+   */
+  public final void setSymbolIndex(int symbolIndex) {
+    this.symbolIndex = symbolIndex;
+  }
+
   /** Next vertex. */
   private AbstractVertex straightVertex = null;
   
+  private ValidationType validationType = ValidationType.NORMAL;
+  
+
+  /**
+   * @return the validationType
+   */
+  public final ValidationType getValidationType() {
+    return validationType;
+  }
+
+  /**
+   * @param validationType the validationType to set
+   */
+  public final void setValidationType(final ValidationType validationType) {
+    this.validationType = validationType;
+  }
+
   /**
    * @return the signalIndex
    */
