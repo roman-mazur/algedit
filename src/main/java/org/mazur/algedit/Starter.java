@@ -8,6 +8,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
+import org.mazur.algedit.gui.EditorFrame;
+
 /**
  * Starter for editor.
  * @author Roman Mazur (IO-52)

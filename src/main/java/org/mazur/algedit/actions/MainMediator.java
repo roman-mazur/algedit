@@ -9,12 +9,12 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.mazur.algedit.EditorFrame;
 import org.mazur.algedit.alg.AlgorithmMatrix;
 import org.mazur.algedit.alg.BeginVertex;
 import org.mazur.algedit.alg.StructureBuilder;
-import org.mazur.algedit.components.AlgorithmContent;
-import org.mazur.algedit.components.GraphPanel;
+import org.mazur.algedit.gui.AlgorithmContent;
+import org.mazur.algedit.gui.EditorFrame;
+import org.mazur.algedit.gui.GraphPanel;
 import org.mazur.algedit.mili.MiliVertex;
 import org.mazur.algedit.utils.Drawer;
 import org.mazur.algedit.utils.GraphTransformer;

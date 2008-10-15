@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import org.mazur.algedit.RedrawParseException;
+import org.mazur.algedit.exceptions.RedrawParseException;
 import org.mazur.algedit.utils.AbstractCrawlHandler;
 import org.mazur.algedit.utils.Crawler;
 import org.mazur.parser.AbstractHandlersFactory;
