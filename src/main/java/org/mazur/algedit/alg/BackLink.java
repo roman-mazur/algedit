@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.structure;
+package org.mazur.algedit.alg;
 
 /**
  * Back link.

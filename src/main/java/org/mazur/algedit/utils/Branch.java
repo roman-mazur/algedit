@@ -1,6 +1,6 @@
-package org.mazur.algedit.structure.utils;
+package org.mazur.algedit.utils;
 
-import org.mazur.algedit.structure.AbstractVertex;
+import org.mazur.algedit.alg.AbstractVertex;
 
 public class Branch {
   private AbstractVertex from, to;

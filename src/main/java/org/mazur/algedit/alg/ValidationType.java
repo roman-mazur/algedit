@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.structure;
+package org.mazur.algedit.alg;
 
 /**
  * @author Roman Mazur (IO-52)

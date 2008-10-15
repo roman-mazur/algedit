@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.structure;
+package org.mazur.algedit.alg;
 
 import java.util.LinkedList;
 import java.util.Set;
