@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.components;
+package org.mazur.algedit.gui;
 
 import java.awt.Color;
 import java.io.File;
@@ -14,11 +14,11 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-import org.mazur.algedit.RedrawParseException;
 import org.mazur.algedit.actions.MainMediator;
 import org.mazur.algedit.alg.AbstractVertex;
 import org.mazur.algedit.alg.StructureBuilder;
 import org.mazur.algedit.alg.ValidationType;
+import org.mazur.algedit.exceptions.RedrawParseException;
 import org.mazur.parser.Machine;
 import org.mazur.parser.ParseException;
 import org.mazur.parser.Parser;

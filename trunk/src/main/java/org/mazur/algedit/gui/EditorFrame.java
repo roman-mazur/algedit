@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit;
+package org.mazur.algedit.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -27,8 +27,6 @@ import org.mazur.algedit.actions.NullAction;
 import org.mazur.algedit.actions.OpenAction;
 import org.mazur.algedit.actions.SaveAsAction;
 import org.mazur.algedit.actions.TransformAction;
-import org.mazur.algedit.components.AlgorithmContent;
-import org.mazur.algedit.components.Editor;
 
 /**
  * Main frame of the editor.

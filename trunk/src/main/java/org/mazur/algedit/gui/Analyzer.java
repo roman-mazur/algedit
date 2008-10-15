@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.components;
+package org.mazur.algedit.gui;
 
 /**
  * Analyzer of intervals between inputs. 

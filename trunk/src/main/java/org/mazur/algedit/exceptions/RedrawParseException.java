@@ -1,4 +1,4 @@
-package org.mazur.algedit;
+package org.mazur.algedit.exceptions;
 
 import java.util.List;
 

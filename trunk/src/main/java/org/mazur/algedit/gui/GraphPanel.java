@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.components;
+package org.mazur.algedit.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
