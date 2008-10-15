@@ -26,6 +26,7 @@ import org.mazur.algedit.actions.NewAction;
 import org.mazur.algedit.actions.NullAction;
 import org.mazur.algedit.actions.OpenAction;
 import org.mazur.algedit.actions.SaveAsAction;
+import org.mazur.algedit.actions.TransformAction;
 import org.mazur.algedit.components.AlgorithmContent;
 import org.mazur.algedit.components.Editor;
 
@@ -58,7 +59,8 @@ public class EditorFrame extends JFrame {
      
     {new NullAction("Copy", null),
      new NullAction("Paste", null),
-     new NullAction("Cut", null)},
+     new NullAction("Cut", null),
+     new TransformAction(mediator)},
      
     {new NullAction("About", null)}
   };
@@ -145,6 +147,10 @@ public class EditorFrame extends JFrame {
     ac.addText(text);
     e.setContent(ac);
     documentTabs.add(name, e);
+  }
+
+  public void openNewTab(final JPanel panel, final String name) {
+	documentTabs.add(panel, name);
   }
   
   public Editor getCurrentEditor() {

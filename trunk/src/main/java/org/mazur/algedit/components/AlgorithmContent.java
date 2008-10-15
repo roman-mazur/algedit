@@ -16,10 +16,9 @@ import javax.swing.text.StyleContext;
 
 import org.mazur.algedit.RedrawParseException;
 import org.mazur.algedit.actions.MainMediator;
-import org.mazur.algedit.structure.AbstractVertex;
-import org.mazur.algedit.structure.StructureBuilder;
-import org.mazur.algedit.structure.utils.Drawer;
-import org.mazur.algedit.structure.utils.RedrawInfo;
+import org.mazur.algedit.alg.AbstractVertex;
+import org.mazur.algedit.alg.StructureBuilder;
+import org.mazur.algedit.alg.ValidationType;
 import org.mazur.parser.Machine;
 import org.mazur.parser.ParseException;
 import org.mazur.parser.Parser;
@@ -39,7 +38,7 @@ public class AlgorithmContent implements DocumentListener {
   /** Styles. */
   public static final String NONE_STYLE = "none",
                              BASIC_STYLE = "basic",
-                             ARROW_STYLE = "style",
+                             ARROW_STYLE = "arrow",
                              ERROR_STYLE = "error";
 
   /** Styles. */
@@ -57,6 +56,12 @@ public class AlgorithmContent implements DocumentListener {
     Style error = AlgorithmContent.STYLES.addStyle("error", base);
     StyleConstants.setBold(error, true);
     StyleConstants.setForeground(error, Color.RED);
+    StyleConstants.setFontSize(error, (Integer)base.getAttribute(StyleConstants.FontSize) + 2);
+    
+    Style unreach = AlgorithmContent.STYLES.addStyle(ValidationType.UNREACHABLE.toString(), base);
+    StyleConstants.setBold(unreach, true);
+    StyleConstants.setItalic(unreach, true);
+    StyleConstants.setForeground(unreach, Color.MAGENTA);
     StyleConstants.setFontSize(error, (Integer)base.getAttribute(StyleConstants.FontSize) + 2);
   }
   
@@ -144,7 +149,9 @@ public class AlgorithmContent implements DocumentListener {
       String text = doc.getText(offset, length);
       int p = editor.getCurrentPosition();
       doc.remove(offset, length);
-      doc.insertString(offset, text, AlgorithmContent.STYLES.getStyle(style));
+      Style s = AlgorithmContent.STYLES.getStyle(style);
+      if (s == null) { s = AlgorithmContent.STYLES.getStyle(AlgorithmContent.BASIC_STYLE); }
+      doc.insertString(offset, text, s);
       editor.setCurrentPosition(p);
     } catch (BadLocationException e) {
       e.printStackTrace();
@@ -173,7 +180,7 @@ public class AlgorithmContent implements DocumentListener {
   private void markVertex(final AbstractVertex av, final String text) throws BadLocationException {
     int i = av.getSymbolIndex() + 1;
     while (i < text.length() && text.charAt(i) >= '0' && text.charAt(i) <= '9') { i++; }
-    changeStyle(av.getSymbolIndex(), i - av.getSymbolIndex(), AlgorithmContent.ERROR_STYLE);
+    changeStyle(av.getSymbolIndex(), i - av.getSymbolIndex(), av.getValidationType().toString());
   }
   
   private void processRedraw(final RedrawParseException e) {
@@ -192,7 +199,7 @@ public class AlgorithmContent implements DocumentListener {
     changed = false;
     try {
       changeStyle(0, doc.getLength(), AlgorithmContent.BASIC_STYLE);
-      parser.parse(doc.getText(0, doc.getLength()));
+      parser.parse(doc.getText(0, doc.getLength()) + " ");
       //System.out.println(new Drawer(builder.getBeginVertex()).draw());
     } catch (ParseException e) {
       processException(e);

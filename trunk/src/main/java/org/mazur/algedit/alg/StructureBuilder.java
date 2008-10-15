@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.structure;
+package org.mazur.algedit.alg;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.mazur.algedit.RedrawParseException;
-import org.mazur.algedit.structure.utils.Crawler;
-import org.mazur.algedit.structure.utils.CrawlerHandler;
+import org.mazur.algedit.utils.AbstractCrawlHandler;
+import org.mazur.algedit.utils.Crawler;
 import org.mazur.parser.AbstractHandlersFactory;
 import org.mazur.parser.Machine;
 import org.mazur.parser.MachineException;
@@ -132,7 +132,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
 
   private void endCondition(final Character c) {
     ConditionVertex cv = new ConditionVertex();
-    cv.setSymbolIndex(symbolIndex);
+    cv.setSymbolIndex(symbolIndex - currentCharacters.length() - 1);
     processLastLinks(cv);
     addToArray(cv);
     setSignalIndex(cv);
@@ -140,7 +140,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
 
   private void endOperator(final Character c) {
     OperatorVertex ov = new OperatorVertex();
-    ov.setSymbolIndex(symbolIndex);
+    ov.setSymbolIndex(symbolIndex - currentCharacters.length() - 1);
     processLastLinks(ov);
     addToArray(ov);
     setSignalIndex(ov);
@@ -479,9 +479,7 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
           + " are not completed.");
     }
     final HashSet<AbstractVertex> notreachable = new HashSet<AbstractVertex>(vertexes);
-    Crawler c = new Crawler(getBeginVertex(), new CrawlerHandler() {
-      public void processCondition(final ConditionVertex v) { }
-      public void processNotEnd(final AbstractVertex prev, final AbstractVertex v) { }
+    Crawler c = new Crawler(getBeginVertex(), new AbstractCrawlHandler() {
       public void processVertex(final AbstractVertex v) {
         notreachable.remove(v);
       }

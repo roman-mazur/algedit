@@ -75,9 +75,9 @@ public class AlgPar {
     s += "7:endConditionStartLink "; // ^
     s += "11:error "; // _
     for (int i = 0; i < 10; i++) { s += "3:character "; }
-    s += "12:endCondition "; // \n
-    s += "12:endCondition "; // \r
-    s += "12:endCondition "; // space
+    s += "11:error "; // \n
+    s += "11:error "; // \r
+    s += "11:error "; // space
     s += "11:error"; //else
     s += "\n";
 

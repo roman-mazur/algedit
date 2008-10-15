@@ -1,16 +1,16 @@
 /**
  * 
  */
-package org.mazur.algedit.structure.utils;
+package org.mazur.algedit.utils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.mazur.algedit.structure.AbstractVertex;
-import org.mazur.algedit.structure.BeginVertex;
-import org.mazur.algedit.structure.ConditionVertex;
-import org.mazur.algedit.structure.VertexType;
+import org.mazur.algedit.alg.AbstractVertex;
+import org.mazur.algedit.alg.BeginVertex;
+import org.mazur.algedit.alg.ConditionVertex;
+import org.mazur.algedit.alg.VertexType;
 
 /**
  * @author Roman Mazur (IO-52)
@@ -25,7 +25,7 @@ public class Drawer {
   private HashMap<Branch, Integer> linkIndexes = new HashMap<Branch, Integer>();
   private LinkedList<AbstractVertex> forDrawing = new LinkedList<AbstractVertex>();
 
-  private Crawler crawler = new Crawler(start, new CrawlerHandler() {
+  private Crawler crawler = new Crawler(start, new AbstractCrawlHandler() {
     public void processCondition(ConditionVertex v) {
       addLink(v, v.getAlternativeVertex());
     }
@@ -34,6 +34,8 @@ public class Drawer {
     }
     public void processVertex(final AbstractVertex v) {
       forDrawing.add(v);
+    }
+    public void setCrawler(Crawler c) {
     }
   });
   
@@ -92,13 +94,4 @@ public class Drawer {
     return result;
   }
   
-  public RedrawInfo drawExt() {
-    crawler.setStart(start);
-    crawler.crawl();
-    String content= "";
-    for (AbstractVertex av : forDrawing) {
-      content += drawVertex(av) + " ";
-    }
-    return new RedrawInfo(content, null);
-  }
 }

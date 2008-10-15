@@ -1,33 +1,42 @@
 /**
  * 
  */
-package org.mazur.algedit.structure.utils;
+package org.mazur.algedit.utils;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import org.mazur.algedit.structure.AbstractVertex;
-import org.mazur.algedit.structure.ConditionVertex;
-import org.mazur.algedit.structure.NullVertex;
-import org.mazur.algedit.structure.VertexType;
+import org.mazur.algedit.alg.AbstractVertex;
+import org.mazur.algedit.alg.ConditionVertex;
+import org.mazur.algedit.alg.NullVertex;
+import org.mazur.algedit.alg.VertexType;
 
 /**
  * @author Roman Mazur (IO-52)
  *
  */
 public class Crawler {
-  HashSet<AbstractVertex> visited = new HashSet<AbstractVertex>();
-  LinkedList<AbstractVertex> alternatives = new LinkedList<AbstractVertex>();
+  private HashSet<AbstractVertex> visited = new HashSet<AbstractVertex>();
+  private LinkedList<AbstractVertex> alternatives = new LinkedList<AbstractVertex>();
+  private AbstractVertex prev = null;
+  
+  /**
+   * @return the alternatives
+   */
+  public final LinkedList<AbstractVertex> getAlternatives() {
+    return alternatives;
+  }
 
   private AbstractVertex start;
   private CrawlerHandler handler;
   public Crawler(final AbstractVertex start, final CrawlerHandler h) {
     this.start = start;
     this.handler = h;
+    this.handler.setCrawler(this);
   }
   
   public void crawl() {
-    AbstractVertex current = start, prev = null;
+    AbstractVertex current = start;
     do {
       while (!(current instanceof NullVertex) && !visited.contains(current)) {
         visited.add(current);
@@ -44,9 +53,16 @@ public class Crawler {
         handler.processNotEnd(prev, current);
       }
       if (alternatives.isEmpty()) { break; }
-      System.out.println("@@@@@@@@@" + alternatives.peek());
       current = alternatives.pop();
+      handler.newBrunch(current);
     } while (true);
+  }
+
+  /**
+   * @return the prev
+   */
+  public final AbstractVertex getPrev() {
+    return prev;
   }
 
   /**

@@ -1,13 +1,14 @@
 /**
  * 
  */
-package org.mazur.algedit.structure;
+package org.mazur.algedit.alg;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 
-import org.mazur.algedit.structure.utils.Crawler;
-import org.mazur.algedit.structure.utils.CrawlerHandler;
+import org.mazur.algedit.utils.AbstractCrawlHandler;
+import org.mazur.algedit.utils.Crawler;
+import org.mazur.algedit.utils.CrawlerHandler;
 
 /**
  * @author Roman Mazur (IO-52)
@@ -39,7 +40,7 @@ public class AlgorithmMatrix implements Serializable {
   
   private void build(final AbstractVertex vertex) {
     final LinkedList<AbstractVertex> vertexes = new LinkedList<AbstractVertex>();
-    Crawler c = new Crawler(vertex, new CrawlerHandler() {
+    Crawler c = new Crawler(vertex, new AbstractCrawlHandler() {
       public void processCondition(final ConditionVertex v) { }
       public void processNotEnd(final AbstractVertex prev, final AbstractVertex v) { }
       public void processVertex(final AbstractVertex v) {

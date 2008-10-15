@@ -7,13 +7,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.mazur.algedit.EditorFrame;
+import org.mazur.algedit.alg.AlgorithmMatrix;
+import org.mazur.algedit.alg.BeginVertex;
+import org.mazur.algedit.alg.StructureBuilder;
 import org.mazur.algedit.components.AlgorithmContent;
-import org.mazur.algedit.structure.AlgorithmMatrix;
-import org.mazur.algedit.structure.BeginVertex;
-import org.mazur.algedit.structure.StructureBuilder;
-import org.mazur.algedit.structure.utils.Drawer;
+import org.mazur.algedit.components.GraphPanel;
+import org.mazur.algedit.mili.MiliVertex;
+import org.mazur.algedit.utils.Drawer;
+import org.mazur.algedit.utils.GraphTransformer;
 import org.mazur.parser.Machine;
 import org.mazur.parser.MachineFactory;
 
@@ -129,4 +133,11 @@ public class MainMediator {
     return editorFrame;
   }
 
+  public void transformCurrentAlg() {
+    AlgorithmContent ac = editorFrame.getCurrentEditor().getContent();
+    List<MiliVertex> miliSet = new GraphTransformer().toMiliGraph(ac.getBuilder().getBeginVertex());
+    GraphPanel gp = new GraphPanel(miliSet);
+    editorFrame.openNewTab(gp, "Mili Machine");
+    log(miliSet.toString());
+  }
 }
