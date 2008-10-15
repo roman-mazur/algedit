@@ -21,6 +21,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultStyledDocument;
 
+import org.mazur.algedit.Model;
 import org.mazur.algedit.actions.MainMediator;
 import org.mazur.algedit.actions.NewAction;
 import org.mazur.algedit.actions.NullAction;
@@ -134,13 +135,13 @@ public class EditorFrame extends JFrame {
    */
   public void createNew() {
     String name = EditorFrame.NONAME + (++documentsIndex);
-    Editor e = new Editor();
-    e.setContent(new AlgorithmContent(new DefaultStyledDocument(), mediator));
+    AlgEditor e = new AlgEditor();
+    e.setContent();
     documentTabs.add(name, e);
   }
   
   public void openNewTab(final String text, final String name) {
-    Editor e = new Editor();
+    AlgEditor e = new AlgEditor();
     AlgorithmContent ac = new AlgorithmContent(new DefaultStyledDocument(), mediator);
     ac.addText(text);
     e.setContent(ac);
@@ -148,10 +149,28 @@ public class EditorFrame extends JFrame {
   }
 
   public void openNewTab(final JPanel panel, final String name) {
-	documentTabs.add(panel, name);
+	  documentTabs.add(panel, name);
   }
   
-  public Editor getCurrentEditor() {
-    return (Editor)documentTabs.getSelectedComponent();
+  public AlgEditor getCurrentEditor() {
+    return (AlgEditor)documentTabs.getSelectedComponent();
+  }
+  
+  
+  /**
+   * @param panel panel to select
+   */
+  private void changePanel(final ModelPanel< ? extends Model > panel) {
+    setTitle(this.caption + " - " + panel.getDescription());
+  }
+  
+  /**
+   * Open the new tab for dealing with the some model.
+   * @param panel model panel
+   */
+  public void addModelTab(final ModelPanel< ? extends Model > panel) {
+    String name = EditorFrame.NONAME + (++documentsIndex);
+    documentTabs.add(panel, panel.getShortName() + " " + name);
+    changePanel(panel);
   }
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.alg;
+package org.mazur.algedit.alg.model;
 
 /**
  * Vertex type.

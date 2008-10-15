@@ -1,14 +1,16 @@
 /**
  * 
  */
-package org.mazur.algedit.alg;
+package org.mazur.algedit.alg.utils;
+
+import org.mazur.algedit.alg.model.AbstractVertex;
 
 /**
  * Back link.
  * @author Roman Mazur (IO-52)
  *
  */
-public class BackLink {
+class BackLink {
 
   /** Vertex. */
   private AbstractVertex vertex;

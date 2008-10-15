@@ -1,28 +1,28 @@
 /**
  * 
  */
-package org.mazur.algedit.utils;
+package org.mazur.algedit.alg.utils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.mazur.algedit.alg.AbstractVertex;
-import org.mazur.algedit.alg.BeginVertex;
-import org.mazur.algedit.alg.ConditionVertex;
-import org.mazur.algedit.alg.VertexType;
+import org.mazur.algedit.alg.model.AbstractVertex;
+import org.mazur.algedit.alg.model.BeginVertex;
+import org.mazur.algedit.alg.model.ConditionVertex;
+import org.mazur.algedit.alg.model.VertexType;
 
 /**
  * @author Roman Mazur (IO-52)
  *
  */
-public class Drawer {
+public class AlgorithmDrawer {
 
   private AbstractVertex start;
   private int linkIndex = 1;
   
   private HashMap<AbstractVertex, List<AbstractVertex>> links = new HashMap<AbstractVertex, List<AbstractVertex>>();
-  private HashMap<Branch, Integer> linkIndexes = new HashMap<Branch, Integer>();
+  private HashMap<Brunch, Integer> linkIndexes = new HashMap<Brunch, Integer>();
   private LinkedList<AbstractVertex> forDrawing = new LinkedList<AbstractVertex>();
 
   private Crawler crawler = new Crawler(start, new AbstractCrawlHandler() {
@@ -39,7 +39,7 @@ public class Drawer {
     }
   });
   
-  public Drawer(final BeginVertex start) {
+  public AlgorithmDrawer(final BeginVertex start) {
     this.start = start;
   }
   
@@ -54,7 +54,7 @@ public class Drawer {
   }
   
   private int getLinkIndex(final AbstractVertex from, final AbstractVertex to) {
-    Branch b = new Branch(from, to);
+    Brunch b = new Brunch(from, to);
     Integer index = linkIndexes.get(b);
     if (index == null) {
       index = linkIndex++;

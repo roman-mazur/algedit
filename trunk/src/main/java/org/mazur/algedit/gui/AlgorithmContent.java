@@ -14,12 +14,13 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-import org.mazur.algedit.actions.MainMediator;
-import org.mazur.algedit.alg.AbstractVertex;
-import org.mazur.algedit.alg.StructureBuilder;
-import org.mazur.algedit.alg.ValidationType;
+import org.mazur.algedit.LogEngine;
+import org.mazur.algedit.Logger;
+import org.mazur.algedit.alg.model.AbstractVertex;
+import org.mazur.algedit.alg.model.AlgorithmModel;
+import org.mazur.algedit.alg.model.ValidationType;
+import org.mazur.algedit.alg.utils.ParsersFactory;
 import org.mazur.algedit.exceptions.RedrawParseException;
-import org.mazur.parser.Machine;
 import org.mazur.parser.ParseException;
 import org.mazur.parser.Parser;
 
@@ -30,6 +31,9 @@ import org.mazur.parser.Parser;
  */
 public class AlgorithmContent implements DocumentListener {
 
+  /** Logger. */
+  private final Logger log = LogEngine.getLogger(AlgorithmContent.class);
+  
   /** Font family. */
   private static final String FONT_FAMILY = "Courier";
   /** Font size. */
@@ -68,16 +72,11 @@ public class AlgorithmContent implements DocumentListener {
   /** Document. */
   private DefaultStyledDocument doc;
 
-  /** Mediator. */
-  private MainMediator mediator;
-  
   /** String to parse. */
   private StringBuilder parsingString = new StringBuilder();
   
   /** Parser. */
   private Parser parser = null;
-  /** Builder. */
-  private StructureBuilder builder = null;
   /** Analyzer. */
   private Analyzer analyzer = new Analyzer();
   
@@ -87,7 +86,7 @@ public class AlgorithmContent implements DocumentListener {
   private boolean changed = false;
   private boolean internalChange = false;
   
-  private Editor editor;
+  private AlgEditor editor;
   
   private File source;
   
@@ -95,18 +94,14 @@ public class AlgorithmContent implements DocumentListener {
    * @param doc document
    * @param mediator main mediator
    */
-  public AlgorithmContent(final DefaultStyledDocument doc, final MainMediator mediator) {
+  public AlgorithmContent(final DefaultStyledDocument doc, final AlgorithmModel model) {
     this.doc = doc;
-    this.mediator = mediator;
     this.doc.addDocumentListener(this);
-    Machine m = this.mediator.getMachine();
-    this.parser = new Parser("UTF-8");
-    this.parser.setMachine(m);
-    this.builder = (StructureBuilder)m.getBuilder();
+    this.parser = ParsersFactory.getInstance().createParser(model);
     
     this.analyzer.setContent(this);
     new Thread(this.analyzer).start();
-    this.mediator.log("Analyzer started.");
+    this.log.info("Analyzer started.");
   }
   
   /**
@@ -167,14 +162,14 @@ public class AlgorithmContent implements DocumentListener {
   private void processException(final ParseException e) {
     String msg = e.getDetailMaeesage();
     if (msg != null) {
-      mediator.error(msg);
+      log.error(msg);
       changeStyle(0, doc.getLength(), AlgorithmContent.ERROR_STYLE);
       return;
     }
     int o = e.getOffset();
     if (e.getCharacter() == ' ') { o--; }
     changeStyle(o, 1, AlgorithmContent.ERROR_STYLE);
-    mediator.error(e.getMessage());
+    log.error(e.getMessage());
   }
   
   private void markVertex(final AbstractVertex av, final String text) throws BadLocationException {
@@ -184,7 +179,7 @@ public class AlgorithmContent implements DocumentListener {
   }
   
   private void processRedraw(final RedrawParseException e) {
-    mediator.error("Algorithm mistakes are found!!!!");
+    log.error("Algorithm mistakes are found!!!!");
     try {
       String text = doc.getText(0, doc.getLength());
       for (AbstractVertex av : e.getRedrawList()) {
@@ -229,7 +224,7 @@ public class AlgorithmContent implements DocumentListener {
    * {@inheritDoc}
    */
   public void changedUpdate(final DocumentEvent e) {
-    mediator.log(parsingString.toString() + " e ");
+    log.info(parsingString.toString() + " e ");
   }
 
   /**
@@ -261,7 +256,7 @@ public class AlgorithmContent implements DocumentListener {
     this.analyzer.setStopped(true);
   }
   
-  public void setEditor(final Editor editor) {
+  public void setEditor(final AlgEditor editor) {
     this.editor = editor;
   }
 
@@ -277,13 +272,6 @@ public class AlgorithmContent implements DocumentListener {
    */
   public final void setSource(File source) {
     this.source = source;
-  }
-
-  /**
-   * @return the builder
-   */
-  public final StructureBuilder getBuilder() {
-    return builder;
   }
 
 }

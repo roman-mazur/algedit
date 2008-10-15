@@ -1,16 +1,23 @@
 /**
  * 
  */
-package org.mazur.algedit.alg;
+package org.mazur.algedit.alg.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import org.mazur.algedit.alg.model.AbstractVertex;
+import org.mazur.algedit.alg.model.AlgorithmModel;
+import org.mazur.algedit.alg.model.BeginVertex;
+import org.mazur.algedit.alg.model.ConditionVertex;
+import org.mazur.algedit.alg.model.EndVertex;
+import org.mazur.algedit.alg.model.NullVertex;
+import org.mazur.algedit.alg.model.OperatorVertex;
+import org.mazur.algedit.alg.model.ValidationType;
+import org.mazur.algedit.alg.model.VertexType;
 import org.mazur.algedit.exceptions.RedrawParseException;
-import org.mazur.algedit.utils.AbstractCrawlHandler;
-import org.mazur.algedit.utils.Crawler;
 import org.mazur.parser.AbstractHandlersFactory;
 import org.mazur.parser.Machine;
 import org.mazur.parser.MachineException;
@@ -37,11 +44,12 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
   private LinkedList<BackLink> lastLinks = new LinkedList<BackLink>();
   /** Back links. */
   private HashMap<Integer, BackLink> backLinks = new HashMap<Integer, BackLink>();
-  /** Cycles. */
-  private HashMap<Integer, Cycle> cycles = new HashMap<Integer, Cycle>();
   
   /** Current characters. */
   private String currentCharacters = "";
+  
+  /** Model to build. */
+  private AlgorithmModel model;
   
   private AbstractVertex getLastVertex() {
     return vertexes.get(vertexIndex);
@@ -448,14 +456,16 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     }
   }
   
-  public BeginVertex getBeginVertex() {
-    return (BeginVertex)vertexes.get(0);
+  public AlgorithmModel getModel() {
+    model.setSize(vertexIndex + 1);
+    model.setMainObject(getBeginVertex());
+    return model;
   }
   
-  public int size() {
-    return vertexIndex + 1;
+  public void setModel(final AlgorithmModel model) {
+    this.model = model;
   }
-
+  
   public void reset() {
     vertexIndex = -1;
     for (int i = 0; i < vertexes.size(); i++) {
@@ -463,9 +473,12 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     }
     lastLinks.clear();
     backLinks.clear();
-    cycles.clear();
   }
 
+  private BeginVertex getBeginVertex() {
+    return (BeginVertex)vertexes.get(0);
+  }
+  
   /**
    * {@inheritDoc}
    */
@@ -500,8 +513,4 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     }
   }
   
-  private class Cycle {
-    private AbstractVertex begin, end;
-    private Cycle(final AbstractVertex b, final AbstractVertex e) { begin =b; end = e; }
-  }
 }

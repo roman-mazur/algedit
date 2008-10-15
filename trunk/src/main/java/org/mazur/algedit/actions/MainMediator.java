@@ -9,14 +9,17 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.mazur.algedit.alg.AlgorithmMatrix;
-import org.mazur.algedit.alg.BeginVertex;
-import org.mazur.algedit.alg.StructureBuilder;
+import javax.swing.JFileChooser;
+
+import org.mazur.algedit.ModelType;
+import org.mazur.algedit.alg.model.AlgorithmMatrix;
+import org.mazur.algedit.alg.model.BeginVertex;
+import org.mazur.algedit.alg.utils.AlgorithmDrawer;
+import org.mazur.algedit.alg.utils.StructureBuilder;
 import org.mazur.algedit.gui.AlgorithmContent;
 import org.mazur.algedit.gui.EditorFrame;
 import org.mazur.algedit.gui.GraphPanel;
-import org.mazur.algedit.mili.MiliVertex;
-import org.mazur.algedit.utils.Drawer;
+import org.mazur.algedit.mili.model.MiliVertex;
 import org.mazur.algedit.utils.GraphTransformer;
 import org.mazur.parser.Machine;
 import org.mazur.parser.MachineFactory;
@@ -31,45 +34,20 @@ public class MainMediator {
   /** Editor frame. */
   private EditorFrame editorFrame;
   
-  /** Pool of machines. */
-  private LinkedList<Machine> machinesPool = new LinkedList<Machine>();
-  
-  /** Initial count of parsers in the pool. */
-  private final static int INITIAL_PARSERS_COUNT = 2;
+  /**
+   * Sets file filters.
+   * @param fc file chooser
+   */
+  private static void initFileChooser(final JFileChooser fc) {
+    for (ModelType mt : ModelType.values()) {
+      fc.addChoosableFileFilter(mt.getFilter());
+    }
+  }
   
   /**
    * Creates the mediator.
    */
   public MainMediator() {
-    for (int i = 0; i < MainMediator.INITIAL_PARSERS_COUNT; i++) {
-      machinesPool.add(createMachine());
-    }
-  }
-  
-  private static Machine createMachine() {
-    MachineFactory mf = new MachineFactory("alg.par", new StructureBuilder());
-    try {
-      return mf.build();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-  
-  /**
-   * @return parser from the pool
-   */
-  public synchronized Machine getMachine() {
-    if (machinesPool.isEmpty()) {
-      return createMachine();
-    }
-    return machinesPool.getFirst();
-  }
-  
-  /**
-   * @param parser parser to release
-   */
-  public synchronized void releaseMachine(final Machine parser) {
-    machinesPool.add(parser);
   }
   
   /**
@@ -83,7 +61,7 @@ public class MainMediator {
    * Opens the new document.
    */
   public void createNewAlgorithm() {
-    editorFrame.log("Creating new document...");
+    log("Creating new document...");
     editorFrame.createNew();
   }
   
@@ -118,8 +96,8 @@ public class MainMediator {
         return;
       }
       AlgorithmMatrix m = (AlgorithmMatrix)o;
-      BeginVertex bv = m.buildAlgorithm();
-      editorFrame.openNewTab(new Drawer(bv).draw(), file.getName());
+      BeginVertex bv = m.build();
+      editorFrame.openNewTab(new AlgorithmDrawer(bv).draw(), file.getName());
       log("Loaded from " + file.getAbsolutePath());
     } catch (Exception e) {
       error(e.getMessage() + "");
