@@ -1,11 +1,8 @@
 /**
  * 
  */
-package org.mazur.algedit.alg;
+package org.mazur.algedit.alg.model;
 
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Set;
 
 /**
  * Abstract algorithm vertex.
@@ -104,21 +101,6 @@ public abstract class AbstractVertex {
     return number;
   }
 
-  protected String drawLinks(final LinkedList<BackLink> links) {
-    String result = "";
-    ListIterator<BackLink> iterator = links.listIterator();
-    while (iterator.hasNext()) {
-      BackLink bl = iterator.next();
-      if (bl.getVertex() == this) {
-        iterator.remove();
-        result += "_" + bl.getNumber();
-      }
-    }
-    return result;
-  }
-  
-  public abstract String draw(final LinkedList<BackLink> links, final Set<AbstractVertex> visited);
-  
   public abstract VertexType getType();
 
   /**

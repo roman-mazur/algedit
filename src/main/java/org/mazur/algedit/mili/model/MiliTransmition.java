@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.mili;
+package org.mazur.algedit.mili.model;
 
 import java.io.Serializable;
 import java.util.LinkedList;

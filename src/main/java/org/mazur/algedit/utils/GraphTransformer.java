@@ -7,13 +7,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.mazur.algedit.alg.AbstractVertex;
-import org.mazur.algedit.alg.BeginVertex;
-import org.mazur.algedit.alg.ConditionVertex;
-import org.mazur.algedit.alg.EndVertex;
-import org.mazur.algedit.alg.VertexType;
-import org.mazur.algedit.mili.MiliTransmition;
-import org.mazur.algedit.mili.MiliVertex;
+import org.mazur.algedit.alg.model.AbstractVertex;
+import org.mazur.algedit.alg.model.BeginVertex;
+import org.mazur.algedit.alg.model.ConditionVertex;
+import org.mazur.algedit.alg.model.EndVertex;
+import org.mazur.algedit.alg.model.VertexType;
+import org.mazur.algedit.alg.utils.AbstractCrawlHandler;
+import org.mazur.algedit.alg.utils.Crawler;
+import org.mazur.algedit.mili.model.MiliTransmition;
+import org.mazur.algedit.mili.model.MiliVertex;
 
 /**
  * @author Roman Mazur (IO-52)

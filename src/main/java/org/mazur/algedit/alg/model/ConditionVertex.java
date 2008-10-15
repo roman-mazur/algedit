@@ -1,10 +1,8 @@
 /**
  * 
  */
-package org.mazur.algedit.alg;
+package org.mazur.algedit.alg.model;
 
-import java.util.LinkedList;
-import java.util.Set;
 
 /**
  * Condition vertex.
@@ -39,22 +37,6 @@ public class ConditionVertex extends AbstractVertex {
    */
   public String getLabel() {
     return ConditionVertex.CONDITION_LABEL + getSignalIndex();
-  }
-
-  @Override
-  public String draw(final LinkedList<BackLink> links, final Set<AbstractVertex> visited) {
-    BackLink bl = new BackLink();
-    bl.setVertex(alternativeVertex);
-    bl.setNumber(getLinkIndex());
-    links.add(bl);
-    
-    String next = "";
-    if (!visited.contains(getStraightVertex())) {
-      next = getStraightVertex().draw(links, visited);
-      visited.add(getStraightVertex());
-    }
-    String linksStr = drawLinks(links);
-    return linksStr + getLabel() + "^" + getLinkIndex() + " " + next + " _" + getLinkIndex();
   }
 
   @Override

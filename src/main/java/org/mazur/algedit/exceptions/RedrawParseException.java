@@ -2,7 +2,7 @@ package org.mazur.algedit.exceptions;
 
 import java.util.List;
 
-import org.mazur.algedit.alg.AbstractVertex;
+import org.mazur.algedit.alg.model.AbstractVertex;
 
 public class RedrawParseException extends RuntimeException {
 

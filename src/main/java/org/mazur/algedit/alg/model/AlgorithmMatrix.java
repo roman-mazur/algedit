@@ -1,20 +1,20 @@
 /**
  * 
  */
-package org.mazur.algedit.alg;
+package org.mazur.algedit.alg.model;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 
-import org.mazur.algedit.utils.AbstractCrawlHandler;
-import org.mazur.algedit.utils.Crawler;
-import org.mazur.algedit.utils.CrawlerHandler;
+import org.mazur.algedit.SerializeableMatrix;
+import org.mazur.algedit.alg.utils.AbstractCrawlHandler;
+import org.mazur.algedit.alg.utils.Crawler;
 
 /**
  * @author Roman Mazur (IO-52)
  *
  */
-public class AlgorithmMatrix implements Serializable {
+public class AlgorithmMatrix implements SerializeableMatrix<BeginVertex> {
 
   /** serialVersionUID. */
   private static final long serialVersionUID = 2225101470424995359L;
@@ -114,7 +114,7 @@ public class AlgorithmMatrix implements Serializable {
   /**
    * @return algorithm structure
    */
-  public BeginVertex buildAlgorithm() {
+  public BeginVertex build() {
     AbstractVertex[] vertexes = new AbstractVertex[size];
     BeginVertex res = new BeginVertex();
     vertexes[0] = res;

@@ -1,10 +1,10 @@
 /**
  * 
  */
-package org.mazur.algedit.utils;
+package org.mazur.algedit.alg.utils;
 
-import org.mazur.algedit.alg.AbstractVertex;
-import org.mazur.algedit.alg.ConditionVertex;
+import org.mazur.algedit.alg.model.AbstractVertex;
+import org.mazur.algedit.alg.model.ConditionVertex;
 
 /**
  * @author Roman Mazur (IO-52)

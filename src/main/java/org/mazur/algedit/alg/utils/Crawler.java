@@ -1,15 +1,15 @@
 /**
  * 
  */
-package org.mazur.algedit.utils;
+package org.mazur.algedit.alg.utils;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import org.mazur.algedit.alg.AbstractVertex;
-import org.mazur.algedit.alg.ConditionVertex;
-import org.mazur.algedit.alg.NullVertex;
-import org.mazur.algedit.alg.VertexType;
+import org.mazur.algedit.alg.model.AbstractVertex;
+import org.mazur.algedit.alg.model.ConditionVertex;
+import org.mazur.algedit.alg.model.NullVertex;
+import org.mazur.algedit.alg.model.VertexType;
 
 /**
  * @author Roman Mazur (IO-52)

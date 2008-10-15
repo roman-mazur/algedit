@@ -1,10 +1,10 @@
-package org.mazur.algedit.utils;
+package org.mazur.algedit.alg.utils;
 
-import org.mazur.algedit.alg.AbstractVertex;
+import org.mazur.algedit.alg.model.AbstractVertex;
 
-public class Branch {
+class Brunch {
   private AbstractVertex from, to;
-  public Branch(final AbstractVertex from, final AbstractVertex to) {
+  public Brunch(final AbstractVertex from, final AbstractVertex to) {
     this.from = from; this.to = to;
   }
   @Override
@@ -13,8 +13,8 @@ public class Branch {
   }
   @Override
   public boolean equals(final Object obj) {
-    if (!(obj instanceof Branch)) { return false; }
-    Branch b = (Branch)obj;
+    if (!(obj instanceof Brunch)) { return false; }
+    Brunch b = (Brunch)obj;
     return this.from == b.from && this.to == b.to; 
   }
 }

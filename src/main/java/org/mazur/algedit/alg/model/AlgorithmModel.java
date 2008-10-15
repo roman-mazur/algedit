@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.alg;
+package org.mazur.algedit.alg.model;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -13,19 +13,16 @@ import org.mazur.algedit.ModelType;
  * @author Roman Mazur (IO-52)
  *
  */
-public class AlgorithmModel extends Model {
+public class AlgorithmModel extends Model<BeginVertex> {
 
-  /** Begin vertex. */
-  private BeginVertex beginVertex;
-  
   /** Size. */
   private int size;
   
   /**
    * Constructor.
    */
-  public AlgorithmModel(final Object savedObject) { 
-    beginVertex = ((AlgorithmMatrix)savedObject).buildAlgorithm();
+  public AlgorithmModel(final AlgorithmMatrix am) { 
+    super(am);
   }
 
   /**
@@ -45,18 +42,11 @@ public class AlgorithmModel extends Model {
   }
 
   /**
-   * @return the beginVertex
-   */
-  public final BeginVertex getBeginVertex() {
-    return beginVertex;
-  }
-
-  /**
    * {@inheritDoc}
    */
   @Override
   public void save(final ObjectOutputStream stream) throws IOException {
-    stream.writeObject(new AlgorithmMatrix(beginVertex, size));
+    stream.writeObject(new AlgorithmMatrix(getMainObject(), size));
   }
 
 }

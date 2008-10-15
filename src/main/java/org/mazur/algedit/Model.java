@@ -11,15 +11,42 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-import org.mazur.algedit.alg.AlgorithmModel;
+import org.mazur.algedit.alg.model.AlgorithmMatrix;
+import org.mazur.algedit.alg.model.AlgorithmModel;
 import org.mazur.algedit.exceptions.NotSupportedModelTypeException;
 
 /**
  * Model. 
+ * @param <T> main model object
  * @author Roman Mazur (IO-52)
  *
  */
-public abstract class Model {
+public abstract class Model<T> {
+
+  /** Main object. */
+  private T mainObject;
+  
+  /**
+   * Constructor.
+   * @param sm main model object
+   */
+  public Model(final SerializeableMatrix<T> sm) {
+    mainObject = sm.build();
+  }
+  
+  /**
+   * @param mainObject the mainObject to set
+   */
+  public final void setMainObject(final T mainObject) {
+    this.mainObject = mainObject;
+  }
+
+  /**
+   * @return the mainObject
+   */
+  protected final T getMainObject() {
+    return mainObject;
+  }
 
   /**
    * @param stream stream to use for saving
@@ -63,12 +90,12 @@ public abstract class Model {
    * @return model from the stream
    * @exception IOException I/O exception
    */
-  public static Model load(final InputStream stream, final ModelType type) throws IOException {
+  public static Model<?> load(final InputStream stream, final ModelType type) throws IOException {
     ObjectInputStream is = new ObjectInputStream(stream);
     try {
       switch (type) {
       case ALGORITHM:
-        return new AlgorithmModel(is.readObject());
+        return new AlgorithmModel((AlgorithmMatrix)is.readObject());
       default:
         throw new NotSupportedModelTypeException();
       }

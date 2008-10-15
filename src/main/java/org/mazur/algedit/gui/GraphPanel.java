@@ -19,8 +19,8 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
-import org.mazur.algedit.mili.MiliTransmition;
-import org.mazur.algedit.mili.MiliVertex;
+import org.mazur.algedit.mili.model.MiliTransmition;
+import org.mazur.algedit.mili.model.MiliVertex;
 
 /**
  * @author Roman Mazur (IO-52)

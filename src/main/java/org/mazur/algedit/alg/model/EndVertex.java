@@ -1,10 +1,8 @@
 /**
  * 
  */
-package org.mazur.algedit.alg;
+package org.mazur.algedit.alg.model;
 
-import java.util.LinkedList;
-import java.util.Set;
 
 /**
  * End vertex.
@@ -28,12 +26,6 @@ public class EndVertex extends AbstractVertex {
   @Override
   public AbstractVertex getStraightVertex() {
     return EndVertex.NULL_VERTEX;
-  }
-
-  @Override
-  public String draw(final LinkedList<BackLink> links, final Set<AbstractVertex> visited) {
-    String linksStr = drawLinks(links);
-    return linksStr + getLabel();
   }
 
   @Override
