@@ -43,4 +43,15 @@ public class Logger {
     }
     log.error(o);
   }
+
+  /**
+   * Writes the error.
+   * @param o object
+   */
+  public void error(final Object o, final Throwable e) {
+    if (mediator != null) {
+      mediator.error(o != null ? o.toString() : null);
+    }
+    log.error(o, e);
+  }
 }

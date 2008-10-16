@@ -10,6 +10,8 @@ import java.util.List;
 import org.mazur.algedit.Model;
 import org.mazur.algedit.ModelType;
 import org.mazur.algedit.SerializeableMatrix;
+import org.mazur.algedit.gui.GraphPanel;
+import org.mazur.algedit.gui.ModelPanel;
 
 /**
  * Graph model of the finite machine.
@@ -21,8 +23,16 @@ public class MiliGraphModel extends Model<List<MiliVertex>> {
   /**
    * {@inheritDoc}
    */
-  public MiliGraphModel(final SerializeableMatrix<List<MiliVertex>> sm) {
-    super(sm);
+  public MiliGraphModel(final String name) {
+    super(name);
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public MiliGraphModel(final String name, 
+      final SerializeableMatrix<List<MiliVertex>> sm) {
+    super(name, sm);
   }
 
   /**
@@ -41,6 +51,11 @@ public class MiliGraphModel extends Model<List<MiliVertex>> {
   @Override
   protected void save(final ObjectOutputStream stream) throws IOException {
     stream.writeObject(new MiliMatrix(getMainObject()));
+  }
+
+  @Override
+  public ModelPanel<? extends Model<List<MiliVertex>>> createPanel() {
+    return new GraphPanel(this);
   }
 
 }

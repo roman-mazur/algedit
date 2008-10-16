@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import org.mazur.algedit.alg.model.AlgorithmMatrix;
 import org.mazur.algedit.alg.model.AlgorithmModel;
 import org.mazur.algedit.exceptions.NotSupportedModelTypeException;
+import org.mazur.algedit.gui.ModelPanel;
 
 /**
  * Model. 
@@ -23,14 +24,27 @@ import org.mazur.algedit.exceptions.NotSupportedModelTypeException;
  */
 public abstract class Model<T> {
 
+  /** Model name. */
+  private String name;
+  
   /** Main object. */
-  private T mainObject;
+  private T mainObject = null;
+  
+  /** 
+   * Constructor.
+   * @param name model name 
+   */
+  public Model(final String name) {
+    super();
+    setName(name);
+  }
   
   /**
    * Constructor.
    * @param sm main model object
    */
-  public Model(final SerializeableMatrix<T> sm) {
+  public Model(final String name, final SerializeableMatrix<T> sm) {
+    this(name);
     mainObject = sm.build();
   }
   
@@ -44,7 +58,7 @@ public abstract class Model<T> {
   /**
    * @return the mainObject
    */
-  protected final T getMainObject() {
+  public final T getMainObject() {
     return mainObject;
   }
 
@@ -69,6 +83,7 @@ public abstract class Model<T> {
   public void save(final File file) throws IOException {
     FileOutputStream os = new FileOutputStream(file);
     save(os);
+    setName(file.getName());
   }
   
   /**
@@ -90,17 +105,36 @@ public abstract class Model<T> {
    * @return model from the stream
    * @exception IOException I/O exception
    */
-  public static Model<?> load(final InputStream stream, final ModelType type) throws IOException {
+  public static Model<?> load(final String name, final InputStream stream, final ModelType type) throws IOException {
     ObjectInputStream is = new ObjectInputStream(stream);
     try {
       switch (type) {
       case ALGORITHM:
-        return new AlgorithmModel((AlgorithmMatrix)is.readObject());
+        return new AlgorithmModel(name, (AlgorithmMatrix)is.readObject());
       default:
         throw new NotSupportedModelTypeException();
       }
     } catch (ClassNotFoundException e) {
       throw new NotSupportedModelTypeException(e);
     }
+  }
+  
+  /**
+   * @return panel to deal with this model
+   */ 
+  public abstract ModelPanel<? extends Model<T>> createPanel();
+  
+  /**
+   * @return the name
+   */
+  public final String getName() {
+    return name;
+  }
+
+  /**
+   * @param name name
+   */
+  protected final void setName(final String name) {
+    this.name = name;
   }
 }

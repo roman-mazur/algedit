@@ -8,10 +8,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JPanel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultEdge;
@@ -19,31 +21,42 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
-import org.mazur.algedit.mili.model.MiliTransmition;
+import org.mazur.algedit.mili.model.MiliGraphModel;
+import org.mazur.algedit.mili.model.MiliTransition;
 import org.mazur.algedit.mili.model.MiliVertex;
 
 /**
  * @author Roman Mazur (IO-52)
  *
  */
-public class GraphPanel extends JPanel {
+public class GraphPanel extends ModelPanel<MiliGraphModel> {
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 418726633138555848L;
 
+	/** Icon. */
+	private static Icon icon = null;
+	static {
+	  URL url = GraphPanel.class.getResource("graph.gif");
+	  icon = new ImageIcon(url);
+	}
+	
 	private JGraph jGraph;
 	
-	public GraphPanel(final List<MiliVertex> graph) {
-		jGraph = new JGraph();
+	public GraphPanel(final MiliGraphModel model) {
+	  super(model);
+		
+	  jGraph = new JGraph();
 		jGraph.setModel(new DefaultGraphModel());
 		jGraph.setGridEnabled(true);
 		jGraph.setSize(new Dimension(300, 300));
 		setLayout(new BorderLayout());
-		buildGraph(graph);
+		buildGraph(model);
 		add(BorderLayout.CENTER, jGraph);
 	}
 
-	private void buildGraph(final List<MiliVertex> graph) {
+	private void buildGraph(final MiliGraphModel model) {
+	  List<MiliVertex> graph = model.getMainObject();
 	  Dimension sizes = jGraph.getSize();
 	  System.out.println("sizes: " + sizes);
 	  int r = sizes.height;
@@ -75,7 +88,7 @@ public class GraphPanel extends JPanel {
 			angle += delta;
 		}
 		for (MiliVertex mv : graph) {
-		  for (MiliTransmition mt : mv.getOutgoings()) {
+		  for (MiliTransition mt : mv.getOutgoings()) {
 		    DefaultGraphCell source = cellsMap.get(mt.getSource());
 		    DefaultGraphCell target = cellsMap.get(mt.getTarget());
 		    DefaultEdge edge = new DefaultEdge();
@@ -93,4 +106,12 @@ public class GraphPanel extends JPanel {
 		  }
 		}
 	}
+
+  /**
+   * {@inheritDoc}
+   */
+	@Override
+  public Icon getIcon() {
+	  return GraphPanel.icon;
+  }
 }

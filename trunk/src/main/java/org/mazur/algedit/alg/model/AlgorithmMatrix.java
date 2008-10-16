@@ -35,10 +35,10 @@ public class AlgorithmMatrix implements SerializeableMatrix<BeginVertex> {
     this.size = size;
     connectivity = new byte[this.size][this.size];
     info = new VertexInfo[this.size];
-    build(structure);
+    composeMatrix(structure);
   }
   
-  private void build(final AbstractVertex vertex) {
+  private void composeMatrix(final AbstractVertex vertex) {
     final LinkedList<AbstractVertex> vertexes = new LinkedList<AbstractVertex>();
     Crawler c = new Crawler(vertex, new AbstractCrawlHandler() {
       public void processCondition(final ConditionVertex v) { }
@@ -50,6 +50,7 @@ public class AlgorithmMatrix implements SerializeableMatrix<BeginVertex> {
     });
     c.crawl();
     for (AbstractVertex v : vertexes) {
+      System.out.println(v.getNumber());
       info[v.getNumber()] = new VertexInfo(v);
       if (v.getStraightVertex() instanceof NullVertex) { continue; }
       connectivity[v.getNumber()][v.getStraightVertex().getNumber()] = 1;
@@ -105,6 +106,7 @@ public class AlgorithmMatrix implements SerializeableMatrix<BeginVertex> {
   private AbstractVertex getVertex(final AbstractVertex[] scope, final int index) {
     AbstractVertex res = scope[index];
     if (res != null) { return res; }
+    System.out.println("INDEX: " + index + ", INFO: " + info[index]);
     res = createVertex(info[index]);
     res.setNumber(index);
     scope[index] = res;
@@ -162,6 +164,7 @@ public class AlgorithmMatrix implements SerializeableMatrix<BeginVertex> {
     /** Constructor. */
     public VertexInfo(final AbstractVertex vertex) {
       type = vertex.getType();
+      System.out.println("TYPE: " + type);
       signalIndex = vertex.getSignalIndex();
       if (type == VertexType.CONDITION) {
         alternativeIndex = ((ConditionVertex)vertex).getAlternativeVertex().getNumber();

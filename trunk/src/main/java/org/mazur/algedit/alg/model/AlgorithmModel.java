@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 
 import org.mazur.algedit.Model;
 import org.mazur.algedit.ModelType;
+import org.mazur.algedit.gui.AlgEditor;
+import org.mazur.algedit.gui.ModelPanel;
 
 /**
  * @author Roman Mazur (IO-52)
@@ -21,8 +23,22 @@ public class AlgorithmModel extends Model<BeginVertex> {
   /**
    * Constructor.
    */
-  public AlgorithmModel(final AlgorithmMatrix am) { 
-    super(am);
+  public AlgorithmModel(final String name) {
+    super(name);
+    BeginVertex bv = new BeginVertex();
+    EndVertex ev = new EndVertex();
+    ev.setNumber(1);
+    bv.setStraightVertex(ev);
+    size = 2;
+    setMainObject(bv);
+  }
+  
+  /**
+   * Constructor.
+   * @param am algorithm matrix
+   */
+  public AlgorithmModel(final String name, final AlgorithmMatrix am) { 
+    super(name, am);
   }
 
   /**
@@ -47,6 +63,11 @@ public class AlgorithmModel extends Model<BeginVertex> {
   @Override
   public void save(final ObjectOutputStream stream) throws IOException {
     stream.writeObject(new AlgorithmMatrix(getMainObject(), size));
+  }
+
+  @Override
+  public ModelPanel<? extends Model<BeginVertex>> createPanel() {
+    return new AlgEditor(this);
   }
 
 }

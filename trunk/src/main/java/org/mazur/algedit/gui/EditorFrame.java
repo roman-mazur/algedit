@@ -19,7 +19,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.text.DefaultStyledDocument;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.mazur.algedit.Model;
 import org.mazur.algedit.actions.MainMediator;
@@ -39,9 +40,6 @@ public class EditorFrame extends JFrame {
   /** serialVersionUID. */
   private static final long serialVersionUID = -7866639833323708860L;
 
-  /** "Noname". */
-  private static final String NONAME = "noname";
-  
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyyy hh:mm:ss]");
   
   /** Menu items. */
@@ -73,9 +71,6 @@ public class EditorFrame extends JFrame {
   /** Log area. */
   private JTextArea logArea = new JTextArea();
   
-  /** Index for new documents. */
-  private int documentsIndex = 0;
-  
   /**
    * Constructor.
    */
@@ -103,6 +98,12 @@ public class EditorFrame extends JFrame {
     
     pane.add(BorderLayout.NORTH, buildMenu());
     pane.add(BorderLayout.CENTER, splitter);
+    
+    documentTabs.addChangeListener(new ChangeListener() {
+      public void stateChanged(final ChangeEvent e) {
+        changePanel(getCurrentPanel());
+      }
+    });
   }
   
   private JMenuBar buildMenu() {
@@ -134,18 +135,18 @@ public class EditorFrame extends JFrame {
    * Creates new document.
    */
   public void createNew() {
-    String name = EditorFrame.NONAME + (++documentsIndex);
-    AlgEditor e = new AlgEditor();
-    e.setContent();
-    documentTabs.add(name, e);
+//    String name = EditorFrame.NONAME + (++documentsIndex);
+//    AlgEditor e = new AlgEditor();
+//    e.setContent();
+//    documentTabs.add(name, e);
   }
   
   public void openNewTab(final String text, final String name) {
-    AlgEditor e = new AlgEditor();
-    AlgorithmContent ac = new AlgorithmContent(new DefaultStyledDocument(), mediator);
-    ac.addText(text);
-    e.setContent(ac);
-    documentTabs.add(name, e);
+//    AlgEditor e = new AlgEditor();
+//    AlgorithmContent ac = new AlgorithmContent(new DefaultStyledDocument(), mediator);
+//    ac.addText(text);
+//    e.setContent(ac);
+//    documentTabs.add(name, e);
   }
 
   public void openNewTab(final JPanel panel, final String name) {
@@ -160,17 +161,32 @@ public class EditorFrame extends JFrame {
   /**
    * @param panel panel to select
    */
-  private void changePanel(final ModelPanel< ? extends Model > panel) {
-    setTitle(this.caption + " - " + panel.getDescription());
+  private void changePanel(final ModelPanel<? extends Model<?>> panel) {
+    setTitle(this.caption + " [" + panel.getCaption() + "] " + " - " + panel.getDescription());
   }
   
   /**
    * Open the new tab for dealing with the some model.
    * @param panel model panel
    */
-  public void addModelTab(final ModelPanel< ? extends Model > panel) {
-    String name = EditorFrame.NONAME + (++documentsIndex);
-    documentTabs.add(panel, panel.getShortName() + " " + name);
+  public void addModelTab(final ModelPanel<? extends Model<?>> panel) {
+    documentTabs.addTab(panel.getCaption(), panel.getIcon(), panel, panel.getDescription());
     changePanel(panel);
+  }
+  
+  /**
+   * @return currently selected model tab
+   */
+  @SuppressWarnings("unchecked")
+  public ModelPanel<? extends Model<?>> getCurrentPanel() {
+    return (ModelPanel)documentTabs.getSelectedComponent();
+  }
+  
+  /**
+   * Renew the frame.
+   */
+  public void renew() {
+    changePanel(getCurrentPanel());
+    documentTabs.setTitleAt(documentTabs.getSelectedIndex(), getCurrentPanel().getCaption());
   }
 }

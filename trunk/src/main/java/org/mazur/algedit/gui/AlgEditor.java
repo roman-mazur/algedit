@@ -4,12 +4,16 @@
 package org.mazur.algedit.gui;
 
 import java.awt.BorderLayout;
+import java.net.URL;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.JTextComponent;
 
 import org.mazur.algedit.alg.model.AlgorithmModel;
+import org.mazur.algedit.alg.utils.AlgorithmDrawer;
 
 /**
  * Editor panel.
@@ -20,6 +24,13 @@ public class AlgEditor extends ModelPanel<AlgorithmModel> {
   
   /** serialVersionUID. */
   private static final long serialVersionUID = 1776878022825927215L;
+  
+  /** Icon. */
+  private static Icon icon = null; 
+  static {
+    URL url = AlgEditor.class.getResource("alg.gif");
+    icon = new ImageIcon(url);
+  }
   
   /** Text component. */
   private JTextComponent textComponent = null;
@@ -39,6 +50,9 @@ public class AlgEditor extends ModelPanel<AlgorithmModel> {
     this.content = new AlgorithmContent(new DefaultStyledDocument(), model);
     textComponent.setDocument(content.getDoc());
     content.setEditor(this);
+    
+    AlgorithmDrawer drawer = new AlgorithmDrawer(model.getMainObject());
+    content.addText(drawer.draw());
   }
   
   /**
@@ -57,7 +71,7 @@ public class AlgEditor extends ModelPanel<AlgorithmModel> {
   }
 
   @Override
-  public String getShortName() {
-    return "&";
+  public Icon getIcon() {
+    return AlgEditor.icon;
   }
 }
