@@ -4,8 +4,6 @@
 package org.mazur.algedit;
 
 import java.awt.Dimension;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 
 import org.mazur.algedit.gui.EditorFrame;
@@ -41,12 +39,7 @@ public final class Starter {
       System.out.print((char)i);
     }
     EditorFrame frame = new EditorFrame("algedit");
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(final WindowEvent e) {
-        System.exit(0);
-      }
-    });
+    frame.setDefaultCloseOperation(EditorFrame.EXIT_ON_CLOSE);
     frame.pack();
     frame.setSize(Starter.STANDARD_DIMENSION);
     frame.setVisible(true);

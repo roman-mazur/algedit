@@ -1,37 +1,37 @@
 /**
  * 
  */
-package org.mazur.algedit.utils;
+package org.mazur.algedit.transformers;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.mazur.algedit.Transformer;
 import org.mazur.algedit.alg.model.AbstractVertex;
+import org.mazur.algedit.alg.model.AlgorithmModel;
 import org.mazur.algedit.alg.model.BeginVertex;
 import org.mazur.algedit.alg.model.ConditionVertex;
 import org.mazur.algedit.alg.model.EndVertex;
 import org.mazur.algedit.alg.model.VertexType;
 import org.mazur.algedit.alg.utils.AbstractCrawlHandler;
 import org.mazur.algedit.alg.utils.Crawler;
-import org.mazur.algedit.mili.model.MiliTransmition;
+import org.mazur.algedit.mili.model.MiliGraphModel;
+import org.mazur.algedit.mili.model.MiliTransition;
 import org.mazur.algedit.mili.model.MiliVertex;
 
 /**
  * @author Roman Mazur (IO-52)
  *
  */
-public class GraphTransformer {
+public class GraphTransformer implements Transformer<AlgorithmModel, MiliGraphModel> {
 
   /** Next vertex code. */
   private int nextVertexCode = 0;
   
-  
-  
-  public List<MiliVertex> toMiliGraph(final BeginVertex begin) {
+  private List<MiliVertex> toMiliGraph(final BeginVertex begin) {
     final LinkedList<MiliVertex> result = new LinkedList<MiliVertex>();
     Crawler crawler = new Crawler(begin, new AbstractCrawlHandler() {
-      private Crawler c;
       private LinkedList<ConditionPair> alts = new LinkedList<ConditionPair>();
       private HashMap<AbstractVertex, MiliVertex> beforeVertexes = new HashMap<AbstractVertex, MiliVertex>();
       private MiliVertex lastMiliVertex;
@@ -45,11 +45,12 @@ public class GraphTransformer {
       
       private void add(final AbstractVertex v, final ConditionVertex cond) {
         MiliVertex mv = new MiliVertex();
+        mv.setIndex(nextVertexCode);
         mv.setCode(nextVertexCode++);
         result.add(mv);
         System.out.println("before " + lastMiliVertex);
         if (lastMiliVertex != null) {
-          MiliTransmition t = new MiliTransmition();
+          MiliTransition t = new MiliTransition();
           t.setSource(lastMiliVertex);
           t.setTarget(mv);
           if (v.getType() == VertexType.OPERATOR) {
@@ -92,7 +93,7 @@ public class GraphTransformer {
         lastMiliVertex = cp.prev;
         MiliVertex target = beforeVertexes.get(v);
         if (target != null) {
-          MiliTransmition t = new MiliTransmition();
+          MiliTransition t = new MiliTransition();
           t.setSource(lastMiliVertex);
           t.setTarget(target);
           if (v.getType() == VertexType.OPERATOR) {
@@ -104,10 +105,6 @@ public class GraphTransformer {
         } else {
           add(v, cp.cv);
         }
-      }
-      @Override
-      public void setCrawler(Crawler c) {
-        this.c = c;
       }
     });
     crawler.crawl();
@@ -121,6 +118,16 @@ public class GraphTransformer {
       this.cv = cv;
       this.prev = prev;
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public MiliGraphModel transform(final AlgorithmModel source) {
+    List<MiliVertex> main = toMiliGraph(source.getMainObject());
+    MiliGraphModel model = new MiliGraphModel(source.getName());
+    model.setMainObject(main);
+    return model;
   }
   
 }

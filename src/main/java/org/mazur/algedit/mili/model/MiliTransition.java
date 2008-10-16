@@ -11,7 +11,7 @@ import java.util.List;
  * @author Roman Mazur (IO-52)
  *
  */
-public class MiliTransmition implements Serializable {
+public class MiliTransition implements Serializable {
 
   /** serialVersionUID. */
   private static final long serialVersionUID = -8816751531390153040L;

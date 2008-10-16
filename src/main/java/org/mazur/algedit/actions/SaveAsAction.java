@@ -4,9 +4,10 @@
 package org.mazur.algedit.actions;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JFileChooser;
+import org.mazur.algedit.LogEngine;
+import org.mazur.algedit.Logger;
 
 /**
  * Save action.
@@ -18,6 +19,9 @@ public class SaveAsAction extends EditorAction {
   /** serialVersionUID. */
   private static final long serialVersionUID = -9122259336874890270L;
 
+  /** Logger. */
+  private Logger log = LogEngine.getLogger(SaveAsAction.class);
+  
   public SaveAsAction(MainMediator mediator) {
     super("Save as...", mediator);
   }
@@ -26,11 +30,10 @@ public class SaveAsAction extends EditorAction {
    * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
    */
   public void actionPerformed(final ActionEvent e) {
-    JFileChooser fc = new JFileChooser();
-    int res = fc.showSaveDialog(getMediator().getEditorFrame());
-    if (res == JFileChooser.APPROVE_OPTION) {
-      File f = fc.getSelectedFile();
-      getMediator().saveAlgorithm(f);
+    try {
+      getMediator().saveFile();
+    } catch (IOException ioe) {
+      log.error("Cannot save file.", ioe);
     }
   }
 

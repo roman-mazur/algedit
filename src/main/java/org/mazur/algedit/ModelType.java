@@ -45,11 +45,11 @@ public enum ModelType {
 
   private void setDescription(final String desc) {
     this.description = desc;
-    this.filter = new AbstractFilter() {
+    this.filter = new FileFilter() {
       @Override
       public boolean accept(final File f) {
         for (String ext : ModelType.this.extensions) {
-          if (ext.equals(getExtension(f))) {
+          if (ext.equals(ModelType.getExtension(f))) {
             return true;
           }
         }
@@ -81,6 +81,25 @@ public enum ModelType {
     return null;
   }
   
+  private static String getExtension(final File file) {
+    if (file == null) { return null; }
+    String name = file.getName();
+    int i = name.lastIndexOf('.');
+    if (i >= 0 && i < name.length() - 1) {
+      return name.substring(i + 1).toLowerCase();
+    }
+    return null;
+  }
+
+  
+  /**
+   * @param f file
+   * @return model type
+   */
+  public static ModelType byFile(final File f) {
+    return byExtension(ModelType.getExtension(f));
+  }
+  
   /**
    * @return default extension
    */
@@ -88,20 +107,4 @@ public enum ModelType {
     return extensions[0];
   }
   
-  /**
-   * Abstract file filter.
-   * @author Roman Mazur (IO-52)
-   *
-   */
-  private static abstract class AbstractFilter extends FileFilter {
-    protected String getExtension(final File file) {
-      if (file == null) { return null; }
-      String name = file.getName();
-      int i = name.lastIndexOf('.');
-      if (i >= 0 && i < name.length() - 1) {
-        return name.substring(i + 1).toLowerCase();
-      }
-      return null;
-    }
-  }
 }

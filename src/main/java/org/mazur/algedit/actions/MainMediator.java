@@ -2,27 +2,15 @@ package org.mazur.algedit.actions;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JFileChooser;
 
+import org.mazur.algedit.Model;
 import org.mazur.algedit.ModelType;
-import org.mazur.algedit.alg.model.AlgorithmMatrix;
-import org.mazur.algedit.alg.model.BeginVertex;
-import org.mazur.algedit.alg.utils.AlgorithmDrawer;
-import org.mazur.algedit.alg.utils.StructureBuilder;
-import org.mazur.algedit.gui.AlgorithmContent;
+import org.mazur.algedit.alg.model.AlgorithmModel;
 import org.mazur.algedit.gui.EditorFrame;
-import org.mazur.algedit.gui.GraphPanel;
-import org.mazur.algedit.mili.model.MiliVertex;
-import org.mazur.algedit.utils.GraphTransformer;
-import org.mazur.parser.Machine;
-import org.mazur.parser.MachineFactory;
+import org.mazur.algedit.gui.ModelPanel;
 
 /**
  * Main mediator for the algorithm editor.
@@ -31,6 +19,12 @@ import org.mazur.parser.MachineFactory;
  */
 public class MainMediator {
 
+  /** "Noname". */
+  private static final String NONAME = "noname";
+  
+  /** Index for new documents. */
+  private int documentsIndex = 0;
+  
   /** Editor frame. */
   private EditorFrame editorFrame;
   
@@ -47,8 +41,7 @@ public class MainMediator {
   /**
    * Creates the mediator.
    */
-  public MainMediator() {
-  }
+  public MainMediator() { super(); }
   
   /**
    * @param editorFrame editorFrame to set
@@ -62,7 +55,10 @@ public class MainMediator {
    */
   public void createNewAlgorithm() {
     log("Creating new document...");
-    editorFrame.createNew();
+    String name = MainMediator.NONAME + (++documentsIndex) + "." 
+      + ModelType.ALGORITHM.getDefaultExtension();
+    AlgorithmModel model = new AlgorithmModel(name);
+    editorFrame.addModelTab(model.createPanel());
   }
   
   public void log(final String text) {
@@ -73,49 +69,43 @@ public class MainMediator {
     editorFrame.log("ERROR: " + msg);
   }
   
-  public void saveAlgorithm(final File file) {
-    AlgorithmContent ac = editorFrame.getCurrentEditor().getContent();
-    StructureBuilder builder = ac.getBuilder();
-    AlgorithmMatrix m = new AlgorithmMatrix(builder.getBeginVertex(), builder.size());
-    try {
-      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-      out.writeObject(m);
-      out.close();
-      log("Saved to " + file.getAbsolutePath());
-    } catch (IOException e) {
-      error(e.getMessage());
+  public void transformCurrentAlg() {
+//    AlgorithmContent ac = editorFrame.getCurrentEditor().getContent();
+//    List<MiliVertex> miliSet = new GraphTransformer().toMiliGraph(ac.getBuilder().getBeginVertex());
+//    GraphPanel gp = new GraphPanel(miliSet);
+//    editorFrame.openNewTab(gp, "Mili Machine");
+//    log(miliSet.toString());
+  }
+  
+  /**
+   * Opens the model file.
+   * @throws IOException exception
+   */
+  public void openFile() throws IOException {
+    JFileChooser fc = new JFileChooser();
+    MainMediator.initFileChooser(fc);
+    int res = fc.showOpenDialog(editorFrame);
+    if (res == JFileChooser.APPROVE_OPTION) {
+      File f = fc.getSelectedFile();
+      Model<?> m = Model.load(f.getName(), new FileInputStream(f), ModelType.byFile(f));
+      editorFrame.addModelTab(m.createPanel());
     }
   }
   
-  public void loadAlgorithm(final File file) {
-    try {
-      ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-      Object o = in.readObject();
-      if (!(o instanceof AlgorithmMatrix)) {
-        error("Unknown format for " + file.getAbsolutePath());
-        return;
-      }
-      AlgorithmMatrix m = (AlgorithmMatrix)o;
-      BeginVertex bv = m.build();
-      editorFrame.openNewTab(new AlgorithmDrawer(bv).draw(), file.getName());
-      log("Loaded from " + file.getAbsolutePath());
-    } catch (Exception e) {
-      error(e.getMessage() + "");
-    }
-  }
-
   /**
-   * @return the editorFrame
+   * Saves the model file.
+   * @throws IOException exception
    */
-  public final EditorFrame getEditorFrame() {
-    return editorFrame;
-  }
-
-  public void transformCurrentAlg() {
-    AlgorithmContent ac = editorFrame.getCurrentEditor().getContent();
-    List<MiliVertex> miliSet = new GraphTransformer().toMiliGraph(ac.getBuilder().getBeginVertex());
-    GraphPanel gp = new GraphPanel(miliSet);
-    editorFrame.openNewTab(gp, "Mili Machine");
-    log(miliSet.toString());
+  public void saveFile() throws IOException {
+    ModelPanel<? extends Model<?>> mp = editorFrame.getCurrentPanel();
+    if (mp == null) { return; }
+    JFileChooser fc = new JFileChooser();
+    MainMediator.initFileChooser(fc);
+    int res = fc.showSaveDialog(editorFrame);
+    if (res == JFileChooser.APPROVE_OPTION) {
+      File f = fc.getSelectedFile();
+      mp.getModel().save(f);
+      editorFrame.renew();
+    }  
   }
 }

@@ -3,6 +3,7 @@
  */
 package org.mazur.algedit.gui;
 
+import javax.swing.Icon;
 import javax.swing.JPanel;
 
 import org.mazur.algedit.Model;
@@ -12,7 +13,7 @@ import org.mazur.algedit.Model;
  * @param <T> model type
  * @author Roman Mazur (IO-52)
  */
-public abstract class ModelPanel<T extends Model> extends JPanel {
+public abstract class ModelPanel<T extends Model<?>> extends JPanel {
 
   /** serialVersionUID. */
   private static final long serialVersionUID = 3724410475239129859L;
@@ -31,17 +32,24 @@ public abstract class ModelPanel<T extends Model> extends JPanel {
   /**
    * @return the model
    */
-  protected T getModel() { return model; }
+  public T getModel() { return model; }
   
   /** 
    * @return the short name
    */
-  public abstract String getShortName(); 
+  public abstract Icon getIcon(); 
 
   /** 
    * @return the short name
    */
   public String getDescription() {
     return model.getType().getDescription();
+  }
+  
+  /**
+   * @return panel caption
+   */
+  public String getCaption() {
+    return model.getName();
   }
 }

@@ -4,9 +4,10 @@
 package org.mazur.algedit.actions;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JFileChooser;
+import org.mazur.algedit.LogEngine;
+import org.mazur.algedit.Logger;
 
 /**
  * @author Roman Mazur (IO-52)
@@ -17,6 +18,9 @@ public class OpenAction extends EditorAction {
   /** serialVersionUID. */
   private static final long serialVersionUID = 5670186904083133462L;
 
+  /** Logger. */
+  private final Logger log = LogEngine.getLogger(OpenAction.class);
+  
   public OpenAction(MainMediator mediator) {
     super("Open...", mediator);
   }
@@ -26,13 +30,11 @@ public class OpenAction extends EditorAction {
    * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
    */
   public void actionPerformed(final ActionEvent e) {
-    JFileChooser fc = new JFileChooser();
-    int res = fc.showOpenDialog(getMediator().getEditorFrame());
-    if (res == JFileChooser.APPROVE_OPTION) {
-      File f = fc.getSelectedFile();
-      getMediator().loadAlgorithm(f);
+    try {
+      getMediator().openFile();
+    } catch (IOException ioe) {
+      log.error("Cannot open the file.", ioe);
     }
-
   }
 
 }
