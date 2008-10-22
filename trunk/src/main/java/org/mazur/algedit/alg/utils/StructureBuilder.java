@@ -456,12 +456,6 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     }
   }
   
-  public AlgorithmModel getModel() {
-    model.setSize(vertexIndex + 1);
-    model.setMainObject(getBeginVertex());
-    return model;
-  }
-  
   public void setModel(final AlgorithmModel model) {
     this.model = model;
   }
@@ -511,6 +505,9 @@ public class StructureBuilder extends AbstractHandlersFactory implements Validat
     if (redraw) {
       throw new RedrawParseException(vs);
     }
+
+    model.setSize(vertexIndex + 1);
+    model.setMainObject(getBeginVertex());
   }
   
 }
