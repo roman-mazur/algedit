@@ -12,7 +12,7 @@ public class TransformAction extends EditorAction {
   }
 
   public void actionPerformed(final ActionEvent e) {
-    getMediator().transformCurrentAlg();
+    getMediator().transform();
   }
 
 }

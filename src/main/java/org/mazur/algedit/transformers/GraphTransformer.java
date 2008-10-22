@@ -111,10 +111,10 @@ public class GraphTransformer implements Transformer<AlgorithmModel, MiliGraphMo
     return result;
   }
   
-  private class ConditionPair {
+  private static class ConditionPair {
     private ConditionVertex cv;
     private MiliVertex prev;
-    public ConditionPair(final ConditionVertex cv, final MiliVertex prev) {
+    private ConditionPair(final ConditionVertex cv, final MiliVertex prev) {
       this.cv = cv;
       this.prev = prev;
     }
@@ -124,10 +124,15 @@ public class GraphTransformer implements Transformer<AlgorithmModel, MiliGraphMo
    * {@inheritDoc}
    */
   public MiliGraphModel transform(final AlgorithmModel source) {
-    List<MiliVertex> main = toMiliGraph(source.getMainObject());
+    GraphTransformer implementor = new GraphTransformer();
+    List<MiliVertex> main = implementor.toMiliGraph(source.getMainObject());
     MiliGraphModel model = new MiliGraphModel(source.getName());
     model.setMainObject(main);
     return model;
+  }
+
+  public String getName() {
+    return "Algotithm -> Mili graph";
   }
   
 }

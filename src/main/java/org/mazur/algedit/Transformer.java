@@ -15,6 +15,7 @@ public interface Transformer<ST extends Model<?>, DT extends Model<?>> {
    * @param source source model
    * @return destination model
    */
-  DT transform(final ST source);
+  DT transform(final ST source); 
   
+  String getName();
 }
