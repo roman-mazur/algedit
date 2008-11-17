@@ -9,14 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import org.mazur.algedit.Model;
 import org.mazur.algedit.ModelType;
 import org.mazur.algedit.Transformer;
 import org.mazur.algedit.alg.model.AlgorithmModel;
+import org.mazur.algedit.exceptions.TransformException;
 import org.mazur.algedit.gui.EditorFrame;
 import org.mazur.algedit.gui.ModelPanel;
+import org.mazur.algedit.mili.model.MiliGraphModel;
 import org.mazur.algedit.transformers.GraphTransformer;
+import org.mazur.algedit.transformers.NeighboringCoding;
+import org.mazur.algedit.transformers.TransTableTransformer;
 
 /**
  * Main mediator for the algorithm editor.
@@ -35,6 +40,10 @@ public class MainMediator {
     List list = new LinkedList<Transformer<Model<?>,Model<?>>>();
     list.add(new GraphTransformer());
     TRANSFORMERS.put(AlgorithmModel.class, list);
+    list = new LinkedList<Transformer<Model<?>,Model<?>>>();
+    list.add(new NeighboringCoding());
+    list.add(new TransTableTransformer());
+    TRANSFORMERS.put(MiliGraphModel.class, list);
   }
   
   /** Index for new documents. */
@@ -88,9 +97,29 @@ public class MainMediator {
     ModelPanel<? extends Model<?>> mp = editorFrame.getCurrentPanel();
     List list = MainMediator.TRANSFORMERS.get(mp.getModel().getClass());
     if (list == null || list.size() == 0) { return; }
-    Transformer<Model<?>, Model<?>> transformer = (Transformer<Model<?>, Model<?>>)list.get(0);
-    Model<?> result = transformer.transform(mp.getModel());
-    editorFrame.addModelTab(result.createPanel());
+    Transformer<Model<?>, Model<?>> transformer = null;
+    if (list.size() == 1) {
+      transformer = (Transformer<Model<?>, Model<?>>)list.get(0);
+    } else {
+      String[] options = new String[list.size()];
+      int i = 0;
+      for (Object o : list) { options[i++] = ((Transformer<Model<?>, Model<?>>)o).getName(); }
+      i = JOptionPane.showOptionDialog(editorFrame, "What transformer would you choose?", 
+          "Transform", 
+          JOptionPane.DEFAULT_OPTION, 
+          JOptionPane.QUESTION_MESSAGE, 
+          null, 
+          options, 
+          options[0]);
+      transformer = (Transformer<Model<?>, Model<?>>)list.get(i);
+    }
+     
+    log("Transforming operation: " + transformer.getName());
+    try {
+      editorFrame.addModelTab(transformer.transform(mp.getModel()).createPanel());
+    } catch (TransformException e) {
+      error(e.getMessage());
+    }
   }
   
   /**
@@ -120,6 +149,9 @@ public class MainMediator {
     int res = fc.showSaveDialog(editorFrame);
     if (res == JFileChooser.APPROVE_OPTION) {
       File f = fc.getSelectedFile();
+      if (!mp.getModel().getType().getFilter().accept(f)) {
+        f = new File(f.getParentFile(), f.getName() + "." + mp.getModel().getType().getDefaultExtension());
+      }
       mp.getModel().save(f);
       editorFrame.renew();
     }  

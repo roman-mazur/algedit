@@ -68,12 +68,12 @@ public class GraphPanel extends ModelPanel<MiliGraphModel> {
 	  double angle = 0;
 	  HashMap<MiliVertex, DefaultGraphCell> cellsMap = new HashMap<MiliVertex, DefaultGraphCell>();
 		for (MiliVertex mv : graph) {
+		  if (mv == null) { continue; }
 		  int x = (int)(r * (1 + Math.cos(angle))), y = (int)(r * (1 - Math.sin(angle)));
-		  System.out.println(x + " " + y + " " + r);
 			DefaultGraphCell cell = new DefaultGraphCell();
 			GraphConstants.setBounds(cell.getAttributes(), 
-          new Rectangle2D.Double(x, y, 30, 30));
-			GraphConstants.setValue(cell.getAttributes(), "Q" + mv.getCode());
+          new Rectangle2D.Double(x, y, 50, 50));
+			GraphConstants.setValue(cell.getAttributes(), "Q" + mv.getIndex() + " " + Integer.toBinaryString(mv.getCode()));
 			GraphConstants.setOpaque(cell.getAttributes(), true);
       GraphConstants.setBackground(cell.getAttributes(), Color.BLUE);
       GraphConstants.setForeground(cell.getAttributes(), Color.YELLOW);
@@ -88,9 +88,11 @@ public class GraphPanel extends ModelPanel<MiliGraphModel> {
 			angle += delta;
 		}
 		for (MiliVertex mv : graph) {
+      if (mv == null) { continue; }
 		  for (MiliTransition mt : mv.getOutgoings()) {
-		    DefaultGraphCell source = cellsMap.get(mt.getSource());
+ 		    DefaultGraphCell source = cellsMap.get(mt.getSource());
 		    DefaultGraphCell target = cellsMap.get(mt.getTarget());
+        if (source == null || target == null) { continue; }
 		    DefaultEdge edge = new DefaultEdge();
 	      DefaultPort sPort = (DefaultPort)source.getChildAt(1); 
 	      DefaultPort tPort = (DefaultPort)target.getChildAt(0); 
@@ -101,7 +103,8 @@ public class GraphPanel extends ModelPanel<MiliGraphModel> {
 	      
 	      GraphConstants.setLineEnd(edge.getAttributes(), GraphConstants.ARROW_CLASSIC);
 	      GraphConstants.setEndFill(edge.getAttributes(), true);
-	      GraphConstants.setValue(edge.getAttributes(), "y" + mt.getYSignal() + "/" + mt.getConditions());
+	      String s = mt.getYSignal() >= 0 ? "y" + mt.getYSignal() : "0";
+	      GraphConstants.setValue(edge.getAttributes(), s + "/" + mt.getConditions());
 	      jGraph.getGraphLayoutCache().insert(edge);		    
 		  }
 		}

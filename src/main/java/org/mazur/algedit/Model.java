@@ -15,6 +15,10 @@ import org.mazur.algedit.alg.model.AlgorithmMatrix;
 import org.mazur.algedit.alg.model.AlgorithmModel;
 import org.mazur.algedit.exceptions.NotSupportedModelTypeException;
 import org.mazur.algedit.gui.ModelPanel;
+import org.mazur.algedit.mili.model.MiliGraphModel;
+import org.mazur.algedit.mili.model.MiliMatrix;
+import org.mazur.algedit.transtable.model.TableSerializer;
+import org.mazur.algedit.transtable.model.TransTableModel;
 
 /**
  * Model. 
@@ -111,6 +115,10 @@ public abstract class Model<T> {
       switch (type) {
       case ALGORITHM:
         return new AlgorithmModel(name, (AlgorithmMatrix)is.readObject());
+      case GRAPH:
+        return new MiliGraphModel(name, (MiliMatrix)is.readObject());
+      case TRANS_TABLE:
+        return new TransTableModel(name, (TableSerializer)is.readObject());
       default:
         throw new NotSupportedModelTypeException();
       }

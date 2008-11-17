@@ -33,6 +33,7 @@ public class OpenAction extends EditorAction {
     try {
       getMediator().openFile();
     } catch (IOException ioe) {
+      ioe.printStackTrace();
       log.error("Cannot open the file.", ioe);
     }
   }

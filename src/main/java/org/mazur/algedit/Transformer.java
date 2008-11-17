@@ -3,6 +3,8 @@
  */
 package org.mazur.algedit;
 
+import org.mazur.algedit.exceptions.TransformException;
+
 /**
  * Model transformer.
  * @param <ST> source model type
@@ -15,7 +17,7 @@ public interface Transformer<ST extends Model<?>, DT extends Model<?>> {
    * @param source source model
    * @return destination model
    */
-  DT transform(final ST source); 
+  DT transform(final ST source) throws TransformException; 
   
   String getName();
 }

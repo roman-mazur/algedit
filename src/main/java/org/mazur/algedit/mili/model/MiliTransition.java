@@ -50,6 +50,12 @@ public class MiliTransition implements Serializable {
     conditions.add(new TransmitionCondition(signal, desc));
   }
 
+  public void setConditions(final List<TransmitionCondition> conditions) {
+    for (TransmitionCondition tc : conditions) {
+      addCondition(tc.getIndex(), tc.isDesc());
+    }
+  }
+  
   /**
    * @return the source
    */
@@ -79,22 +85,25 @@ public class MiliTransition implements Serializable {
     return "{to" + target.getCode() + ",y" + ySignal + ", " + conditions + "}";
   }
   
-  public class TransmitionCondition {
-	private int index = -1;
-	private boolean desc = true;
-	
-	private TransmitionCondition(final int index, final boolean desc) {
-	  this.index = index;
-	  this.desc = desc;
-	}
+  public static class TransmitionCondition implements Serializable {
+    /** serialVersionUID. */
+    private static final long serialVersionUID = -6319714316554349457L;
+    
+    private int index = -1;
+    private boolean desc = true;
 
-	public final int getIndex() { return index; }
+    private TransmitionCondition(final int index, final boolean desc) {
+      this.index = index;
+      this.desc = desc;
+    }
 
-	public final boolean isDesc() { return desc; }
-	
-	@Override
-	public String toString() {
+    public final int getIndex() { return index; }
+
+    public final boolean isDesc() { return desc; }
+
+    @Override
+    public String toString() {
       return (!desc ? "~" : "") + "x" + index;
-	}
+    }
   }
 }
