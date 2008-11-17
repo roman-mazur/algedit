@@ -14,11 +14,12 @@ import javax.swing.filechooser.FileFilter;
 public enum ModelType {
 
   /** Types. */
-  ALGORITHM("alg"), GRAPH("grh");
+  ALGORITHM("alg"), GRAPH("grh"), TRANS_TABLE("ttl");
   
   static {
     ModelType.ALGORITHM.setDescription("Algotithm");
     ModelType.GRAPH.setDescription("Graph of the finite machine");
+    ModelType.TRANS_TABLE.setDescription("Transmitions table");
   }
   
   /** Extensions. */

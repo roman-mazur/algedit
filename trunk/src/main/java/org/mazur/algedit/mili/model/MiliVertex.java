@@ -3,6 +3,7 @@
  */
 package org.mazur.algedit.mili.model;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import java.util.List;
  * @author Roman Mazur (IO-52)
  *
  */
-public class MiliVertex {
+public class MiliVertex implements Serializable {
+  /** serialVersionUID. */
+  private static final long serialVersionUID = -4431454799131242684L;
 
   /** Index. */
   private int index;
@@ -40,7 +43,7 @@ public class MiliVertex {
 
   @Override
   public String toString() {
-    return "Q" + code + "(outs=" + outgoings + ")";
+    return "Q" + index + "-" + Integer.toBinaryString(code) + "(outs=" + outgoings + ")";
   }
 
   /**

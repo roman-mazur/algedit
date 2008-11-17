@@ -58,4 +58,12 @@ public class MiliGraphModel extends Model<List<MiliVertex>> {
     return new GraphPanel(this);
   }
 
+  public Object clone() {
+    try {
+      return super.clone();
+    } catch (CloneNotSupportedException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 }
