@@ -15,13 +15,12 @@ public class TableSerializer implements SerializeableMatrix<List<TableRow>> {
 
   private static final long serialVersionUID = 1407220945514720829L;
 
+  private List<TableRow> rows;
+  
   public TableSerializer(final List<TableRow> rows) {
-    // TODO Auto-generated constructor stub
+    this.rows = rows;
   }
   
-  public List<TableRow> build() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  public List<TableRow> build() { return this.rows; }
 
 }

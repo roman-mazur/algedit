@@ -161,5 +161,8 @@ public class TableRow implements Serializable {
     public String toString() {
       return (r >= 0 ? String.valueOf(r) : "-") + (s >= 0 ? String.valueOf(s) : "-");
     }
+    public byte[] getValues() {
+      return new byte[] {r, s};
+    }
   }
 }

@@ -13,6 +13,8 @@ import java.io.OutputStream;
 
 import org.mazur.algedit.alg.model.AlgorithmMatrix;
 import org.mazur.algedit.alg.model.AlgorithmModel;
+import org.mazur.algedit.boolfunc.model.BoolFunctionModel;
+import org.mazur.algedit.boolfunc.model.BoolFunctionSerializer;
 import org.mazur.algedit.exceptions.NotSupportedModelTypeException;
 import org.mazur.algedit.gui.ModelPanel;
 import org.mazur.algedit.mili.model.MiliGraphModel;
@@ -119,6 +121,8 @@ public abstract class Model<T> {
         return new MiliGraphModel(name, (MiliMatrix)is.readObject());
       case TRANS_TABLE:
         return new TransTableModel(name, (TableSerializer)is.readObject());
+      case BOOL_FUNCTIONS:
+        return new BoolFunctionModel(name, (BoolFunctionSerializer)is.readObject());
       default:
         throw new NotSupportedModelTypeException();
       }

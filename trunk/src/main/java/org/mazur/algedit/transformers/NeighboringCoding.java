@@ -37,7 +37,7 @@ public class NeighboringCoding implements Transformer<MiliGraphModel, MiliGraphM
   public static int getMinDigitsCount(final int vCount) {
     if (vCount == 0) { return 0; }
     int v = vCount;
-    int res = 31;
+    int res = 32;
     while ((v & (1 << 31)) == 0) { v <<= 1; res--; }
     return res;
   }
@@ -167,7 +167,7 @@ public class NeighboringCoding implements Transformer<MiliGraphModel, MiliGraphM
   }
   
   private MiliGraphModel t(final MiliGraphModel source) throws TransformException {
-    int count = NeighboringCoding.getMinDigitsCount(source.getMainObject().size());
+    int count = NeighboringCoding.getMinDigitsCount(source.getMainObject().size() - 1);
     MiliTransition transition = new MiliTransition();
     MiliVertex vertex = source.getMainObject().get(0);
     transition.setTarget(vertex);

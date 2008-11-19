@@ -19,9 +19,11 @@ import org.mazur.algedit.exceptions.TransformException;
 import org.mazur.algedit.gui.EditorFrame;
 import org.mazur.algedit.gui.ModelPanel;
 import org.mazur.algedit.mili.model.MiliGraphModel;
+import org.mazur.algedit.transformers.BoolFunctionsTransformer;
 import org.mazur.algedit.transformers.GraphTransformer;
 import org.mazur.algedit.transformers.NeighboringCoding;
 import org.mazur.algedit.transformers.TransTableTransformer;
+import org.mazur.algedit.transtable.model.TransTableModel;
 
 /**
  * Main mediator for the algorithm editor.
@@ -44,6 +46,9 @@ public class MainMediator {
     list.add(new NeighboringCoding());
     list.add(new TransTableTransformer());
     TRANSFORMERS.put(MiliGraphModel.class, list);
+    list = new LinkedList<Transformer<Model<?>,Model<?>>>();
+    list.add(new BoolFunctionsTransformer());
+    TRANSFORMERS.put(TransTableModel.class, list);
   }
   
   /** Index for new documents. */
