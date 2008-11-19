@@ -11,6 +11,7 @@ import org.mazur.algedit.Model;
 import org.mazur.algedit.ModelType;
 import org.mazur.algedit.gui.ModelPanel;
 import org.mazur.algedit.gui.TransTablePanel;
+import org.mazur.algedit.transformers.NeighboringCoding;
 
 /**
  * @author Roman Mazur (IO-52)
@@ -18,11 +19,31 @@ import org.mazur.algedit.gui.TransTablePanel;
  */
 public class TransTableModel extends Model<List<TableRow>> {
 
+  private int codeDigitsCount;
+  
+  /**
+   * @return the codeDigitsCount
+   */
+  public final int getCodeDigitsCount() {
+    return codeDigitsCount;
+  }
+  /**
+   * @param codeDigitsCount the codeDigitsCount to set
+   */
+  public final void setCodeDigitsCount(int codeDigitsCount) {
+    this.codeDigitsCount = codeDigitsCount;
+  }
+  
   public TransTableModel(final String name) {
     super(name);
   }
   public TransTableModel(final String name, final TableSerializer sm) {
     super(name, sm);
+    codeDigitsCount = 0;
+    for (TableRow row : getMainObject()) {
+      int x = NeighboringCoding.getMinDigitsCount(row.getCodeFrom());
+      if (codeDigitsCount < x) { codeDigitsCount = x; }
+    }
   }
 
   @Override

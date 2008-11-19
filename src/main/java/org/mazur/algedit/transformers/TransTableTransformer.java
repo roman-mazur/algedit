@@ -30,8 +30,7 @@ public class TransTableTransformer implements Transformer<MiliGraphModel, TransT
     LinkedList<Entry> entries = new LinkedList<Entry>();
     int digitsCount = 0, sCount = 0, cCount = 0;
     for (MiliVertex vertex : source.getMainObject()) {
-      int x = NeighboringCoding.getMinDigitsCount(vertex.getCode()) + 1;
-      System.out.println(vertex.getCode() + " " + x + " " + digitsCount);
+      int x = NeighboringCoding.getMinDigitsCount(vertex.getCode());
       if (digitsCount < x) { digitsCount = x; }
       for (MiliTransition mt : vertex.getOutgoings()) {
         Entry entry = new Entry();
@@ -79,6 +78,7 @@ public class TransTableTransformer implements Transformer<MiliGraphModel, TransT
     }
     TransTableModel result = new TransTableModel(source.getName());
     result.setMainObject(rows);
+    result.setCodeDigitsCount(digitsCount);
     return result;
   }
 
