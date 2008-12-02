@@ -57,6 +57,34 @@ public class BoolFunctionModel extends Model<BoolFunctionModel.FunctionsHolder> 
   public List<BoolFunction> getOutFunctions() { return holder.outFunctions; }
   public List<BoolFunction> getTransFunctions() { return holder.transFunctions; }
   
+  private static String getValue(final ArrayList<String> v, final int i) {
+    if (i < v.size()) { return v.get(i); }
+    return "";
+  }
+  public static void setValue(final ArrayList<String> v, final int i, final String value) {
+    while (v.size() <= i) { v.add(""); }
+    v.set(i, value);
+  }
+  public static void merge(final ArrayList<String> n1, final ArrayList<String> n2) {
+    int l = n1.size(); if (l < n2.size()) { l = n2.size(); }
+    for (int i = 0; i < l; i++) {
+      String v1 = getValue(n1, i);
+      if (v1.length() == 0) {
+        setValue(n1, i, getValue(n2, i));
+      }
+    }
+  }
+  public String[] getNames() {
+    ArrayList<String> names = new ArrayList<String>();
+    for (BoolFunction f : holder.outFunctions) {
+      merge(names, f.getNames());
+    }
+    for (BoolFunction f : holder.transFunctions) {
+      merge(names, f.getNames());
+    }
+    return names.toArray(new String[1]);
+  }
+  
   static final class FunctionsHolder implements Serializable {
     private static final long serialVersionUID = -1268018407207051636L;
     private List<BoolFunction> outFunctions;

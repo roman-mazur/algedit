@@ -22,7 +22,7 @@ public class BoolFunctionsTransformer implements Transformer<TransTableModel, Bo
     return "Boolean functions";
   }
 
-  private static void prepareResult(final BoolFunctionModel result, final int oCnt, final int transCnt) {
+  public static void prepareResult(final BoolFunctionModel result, final int oCnt, final int transCnt) {
     result.setOutFunctions(oCnt);
     result.setTransFunctions(transCnt);
     for (int i = 0; i < oCnt; i++) {
@@ -66,21 +66,27 @@ public class BoolFunctionsTransformer implements Transformer<TransTableModel, Bo
       }
       
       for (int i = 0; i < outFuncCount; i++) {
+        BoolFunction f = result.getOutFunctions().get(i);
         if (row.getOperatorSignals()[i] == 1) {
-          BoolFunction f = result.getOutFunctions().get(i);
           f.getDisjunction().add(term);
+        } else {
+          f.getInverse().add(term);
         }
       }
       for (int i = 0; i < source.getCodeDigitsCount(); i++) {
         byte[] rs = row.getRsFunctions()[i].getValues();
         int tfi = i << 1;
+        BoolFunction r = result.getTransFunctions().get(tfi);
         if (rs[0] == 1) {
-          BoolFunction r = result.getTransFunctions().get(tfi);
           r.getDisjunction().add(term);
+        } else {
+          r.getInverse().add(term);
         }
+        BoolFunction s = result.getTransFunctions().get(tfi + 1);
         if (rs[1] == 1) {
-          BoolFunction r = result.getTransFunctions().get(tfi + 1);
-          r.getDisjunction().add(term);
+          s.getDisjunction().add(term);
+        } else {
+          s.getInverse().add(term);
         }
       }
     }
