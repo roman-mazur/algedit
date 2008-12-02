@@ -15,12 +15,14 @@ import org.mazur.algedit.Model;
 import org.mazur.algedit.ModelType;
 import org.mazur.algedit.Transformer;
 import org.mazur.algedit.alg.model.AlgorithmModel;
+import org.mazur.algedit.boolfunc.model.BoolFunctionModel;
 import org.mazur.algedit.exceptions.TransformException;
 import org.mazur.algedit.gui.EditorFrame;
 import org.mazur.algedit.gui.ModelPanel;
 import org.mazur.algedit.mili.model.MiliGraphModel;
 import org.mazur.algedit.transformers.BoolFunctionsTransformer;
 import org.mazur.algedit.transformers.GraphTransformer;
+import org.mazur.algedit.transformers.MinimizationTransformer;
 import org.mazur.algedit.transformers.NeighboringCoding;
 import org.mazur.algedit.transformers.TransTableTransformer;
 import org.mazur.algedit.transtable.model.TransTableModel;
@@ -39,16 +41,19 @@ public class MainMediator {
   private static final Map<Class, List> TRANSFORMERS = 
     new HashMap<Class, List>();
   static {
-    List list = new LinkedList<Transformer<Model<?>,Model<?>>>();
+    List list = new LinkedList<Transformer<Model<?>,Model<?>>>(); //from ALGORITHM
     list.add(new GraphTransformer());
     TRANSFORMERS.put(AlgorithmModel.class, list);
-    list = new LinkedList<Transformer<Model<?>,Model<?>>>();
+    list = new LinkedList<Transformer<Model<?>,Model<?>>>(); //from GRAPH
     list.add(new NeighboringCoding());
     list.add(new TransTableTransformer());
     TRANSFORMERS.put(MiliGraphModel.class, list);
-    list = new LinkedList<Transformer<Model<?>,Model<?>>>();
+    list = new LinkedList<Transformer<Model<?>,Model<?>>>(); //from TRANS_TABLE
     list.add(new BoolFunctionsTransformer());
     TRANSFORMERS.put(TransTableModel.class, list);
+    list = new LinkedList<Transformer<Model<?>,Model<?>>>(); //from BOOL_FUNCS
+    list.add(new MinimizationTransformer());
+    TRANSFORMERS.put(BoolFunctionModel.class, list);
   }
   
   /** Index for new documents. */

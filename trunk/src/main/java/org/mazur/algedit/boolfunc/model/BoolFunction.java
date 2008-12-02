@@ -4,6 +4,7 @@
 package org.mazur.algedit.boolfunc.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,8 +18,16 @@ public class BoolFunction implements Serializable {
 
   private int index;
   private String name;
-  
+
+  private List<ConjunctionTerm> inverse = new LinkedList<ConjunctionTerm>();
   private List<ConjunctionTerm> disjunction = new LinkedList<ConjunctionTerm>();
+
+  /**
+   * @return the inverse
+   */
+  public final List<ConjunctionTerm> getInverse() {
+    return inverse;
+  }
 
   /**
    * @return the disjunction
@@ -72,5 +81,12 @@ public class BoolFunction implements Serializable {
   public final void setName(String name) {
     this.name = name;
   }
-  
+ 
+  public ArrayList<String> getNames() {
+    ArrayList<String> res = new ArrayList<String>();
+    for (ConjunctionTerm ct : disjunction) {
+      BoolFunctionModel.merge(res, ct.getNames());
+    }
+    return res;
+  }
 }
