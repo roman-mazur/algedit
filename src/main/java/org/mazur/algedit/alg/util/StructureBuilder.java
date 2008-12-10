@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.alg.utils;
+package org.mazur.algedit.alg.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,0 +1,23 @@
+entity automata is
+  port (
+    CLK, RST: in bit;
+    IN_SIGNALS: INPUT_TYPE;
+    OUT_SIGANLS: OUTPUT_TYPE
+  );
+end automata;
+
+architecture mealy of automata is
+  signal st: STATE;
+  constant init_st: STATE := INIT_STATE;
+begin
+  STATE_RG: process(CLK, RST)
+  begin
+    if RST = '1' then st <= init_st;
+    elseif rising_edge(CLK) then st <= next_state(st, IN_SIGNALS);
+    end if;
+  end process;
+  OUT_S: process(st, IN_SIGNALS)
+  begin
+    OUT_SIGNALS <= outs(st, IN_SIGNALS);
+  end process;
+end mealy;

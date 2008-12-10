@@ -19,7 +19,7 @@ import org.mazur.algedit.Logger;
 import org.mazur.algedit.alg.model.AbstractVertex;
 import org.mazur.algedit.alg.model.AlgorithmModel;
 import org.mazur.algedit.alg.model.ValidationType;
-import org.mazur.algedit.alg.utils.ParsersFactory;
+import org.mazur.algedit.alg.util.ParsersFactory;
 import org.mazur.algedit.exceptions.RedrawParseException;
 import org.mazur.parser.ParseException;
 import org.mazur.parser.Parser;

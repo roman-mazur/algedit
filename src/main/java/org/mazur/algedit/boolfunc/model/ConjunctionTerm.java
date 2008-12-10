@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.mazur.algedit.device.model.In;
+import org.mazur.algedit.device.model.Outable;
+
 public class ConjunctionTerm implements Serializable {
 
   private static final long serialVersionUID = 527010964023168935L;
@@ -116,6 +119,17 @@ public class ConjunctionTerm implements Serializable {
       }
     }
     return result;
+  }
+  
+  public List<Outable> getIns() {
+    List<Outable> res = new ArrayList<Outable>(elements.size());
+    for (TermElement e : elements) {
+      In in = new In();
+      in.setName(e.input.getInName());
+      in.setInverse(!e.direction);
+      res.add(in);
+    }
+    return res;
   }
   
   private static class TermElement implements Serializable {
