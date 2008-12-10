@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.alg.utils;
+package org.mazur.algedit.alg.util;
 
 import org.mazur.algedit.alg.model.AbstractVertex;
 import org.mazur.algedit.alg.model.ConditionVertex;
@@ -14,19 +14,19 @@ public abstract class AbstractCrawlHandler implements CrawlerHandler {
 
   /**
    * {@inheritDoc}
-   * @see org.mazur.algedit.alg.utils.CrawlerHandler#processCondition(org.mazur.algedit.alg.model.ConditionVertex)
+   * @see org.mazur.algedit.alg.util.CrawlerHandler#processCondition(org.mazur.algedit.alg.model.ConditionVertex)
    */
   public void processCondition(final ConditionVertex v) { }
 
   /**
    * {@inheritDoc}
-   * @see org.mazur.algedit.alg.utils.CrawlerHandler#processNotEnd(org.mazur.algedit.alg.model.AbstractVertex, org.mazur.algedit.alg.model.AbstractVertex)
+   * @see org.mazur.algedit.alg.util.CrawlerHandler#processNotEnd(org.mazur.algedit.alg.model.AbstractVertex, org.mazur.algedit.alg.model.AbstractVertex)
    */
   public void processNotEnd(final AbstractVertex prev, final AbstractVertex v) { }
 
   /**
    * {@inheritDoc}
-   * @see org.mazur.algedit.alg.utils.CrawlerHandler#processVertex(org.mazur.algedit.alg.model.AbstractVertex)
+   * @see org.mazur.algedit.alg.util.CrawlerHandler#processVertex(org.mazur.algedit.alg.model.AbstractVertex)
    */
   public void processVertex(final AbstractVertex v) { }
 

@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 import org.mazur.algedit.SerializeableMatrix;
-import org.mazur.algedit.alg.utils.AbstractCrawlHandler;
-import org.mazur.algedit.alg.utils.Crawler;
+import org.mazur.algedit.alg.util.AbstractCrawlHandler;
+import org.mazur.algedit.alg.util.Crawler;
 
 /**
  * @author Roman Mazur (IO-52)

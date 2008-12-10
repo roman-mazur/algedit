@@ -13,7 +13,7 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.JTextComponent;
 
 import org.mazur.algedit.alg.model.AlgorithmModel;
-import org.mazur.algedit.alg.utils.AlgorithmDrawer;
+import org.mazur.algedit.alg.util.AlgorithmDrawer;
 
 /**
  * Editor panel.

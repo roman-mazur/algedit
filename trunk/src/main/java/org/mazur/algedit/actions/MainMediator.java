@@ -21,6 +21,7 @@ import org.mazur.algedit.gui.EditorFrame;
 import org.mazur.algedit.gui.ModelPanel;
 import org.mazur.algedit.mili.model.MiliGraphModel;
 import org.mazur.algedit.transformers.BoolFunctionsTransformer;
+import org.mazur.algedit.transformers.DeviceTransformer;
 import org.mazur.algedit.transformers.GraphTransformer;
 import org.mazur.algedit.transformers.MinimizationTransformer;
 import org.mazur.algedit.transformers.NeighboringCoding;
@@ -53,6 +54,7 @@ public class MainMediator {
     TRANSFORMERS.put(TransTableModel.class, list);
     list = new LinkedList<Transformer<Model<?>,Model<?>>>(); //from BOOL_FUNCS
     list.add(new MinimizationTransformer());
+    list.add(new DeviceTransformer());
     TRANSFORMERS.put(BoolFunctionModel.class, list);
   }
   

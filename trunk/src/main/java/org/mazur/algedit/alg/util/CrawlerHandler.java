@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mazur.algedit.alg.utils;
+package org.mazur.algedit.alg.util;
 
 import org.mazur.algedit.alg.model.AbstractVertex;
 import org.mazur.algedit.alg.model.ConditionVertex;

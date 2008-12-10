@@ -49,4 +49,6 @@ public class Input implements Serializable {
   public String getDescription() {
     return name + " - "+ number;
   }
+  
+  public String getInName() { return name; }
 }
